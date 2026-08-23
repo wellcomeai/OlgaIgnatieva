@@ -10,6 +10,8 @@ const columns = [
       { label: 'Что внутри', href: '/#what-you-get' },
       { label: 'AI', href: '/#ai-agents' },
       { label: 'Как начать', href: '/#how-to-start' },
+      { label: 'Обучение', href: '/#education' },
+      { label: 'GitHub', href: 'https://github.com/wellcomeai/OpenSaas--' },
     ],
   },
   {
@@ -60,7 +62,7 @@ export function Footer() {
               </span>
             </Link>
             <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.65)', lineHeight: '1.6' }}>
-              Готовая платформа для запуска онлайн-сервиса. Шаблон + 5 видеоуроков.
+              Открытый шаблон SaaS-платформы под лицензией MIT. Форкай бесплатно — или приходи на обучение.
             </p>
           </div>
 

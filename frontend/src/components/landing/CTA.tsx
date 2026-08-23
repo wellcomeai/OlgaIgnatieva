@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Send } from "lucide-react";
+import { Github, Send } from "lucide-react";
 
 export function CTA() {
   return (
@@ -83,7 +83,7 @@ export function CTA() {
             margin: '0 auto 40px',
           }}
         >
-          Шаблон + 5 уроков. Один платёж — навсегда.
+          Шаблон — бесплатно на GitHub. Обучение — для тех, кто хочет большего.
         </p>
 
         <div
@@ -97,7 +97,9 @@ export function CTA() {
           }}
         >
           <Link
-            href="#"
+            href="https://github.com/wellcomeai/OpenSaas--"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-[#0a3fa8] rounded-xl px-7 no-underline tracking-tight transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
             style={{
               background: 'white',
@@ -107,14 +109,12 @@ export function CTA() {
               boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
             }}
           >
-            <span aria-hidden>💳</span>
-            Купить за 3000₽
+            <Github size={16} />
+            Забрать на GitHub
           </Link>
 
-          <a
-            href="https://t.me/wellcome_ai"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/#education"
             className="inline-flex items-center gap-2 text-white rounded-xl px-7 no-underline tracking-tight transition-all duration-200 hover:scale-[1.02] hover:bg-white/20"
             style={{
               background: 'rgba(255,255,255,0.14)',
@@ -125,13 +125,22 @@ export function CTA() {
               fontWeight: 600,
             }}
           >
-            <Send size={16} />
-            Автор шаблона
-          </a>
+            <span aria-hidden>🎓</span>
+            Пройти обучение
+          </Link>
         </div>
 
         <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)' }}>
-          Разовая оплата · Доступ навсегда · Без подписки
+          Открытый код · Лицензия MIT ·{' '}
+          <a
+            href="https://t.me/wellcome_ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'rgba(255,255,255,0.85)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+          >
+            <Send size={12} />
+            Вопросы — в Telegram
+          </a>
         </p>
       </div>
     </section>

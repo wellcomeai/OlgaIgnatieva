@@ -91,12 +91,23 @@ export function ManifestoSection() {
             margin: '0 auto 56px',
           }}
         >
-          OpenSaaS — готовая платформа с продуманной архитектурой. Купи один раз, запускай своё.
+          Поэтому OpenSaaS — открытый код. Забирай бесплатно, запускай своё.
+          А если хочешь строить SaaS-платформы профессионально — мы научим.
         </p>
 
-        <Link href="#" className="btn-primary-new">
-          Купить за 3000₽
-        </Link>
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link
+            href="https://github.com/wellcomeai/OpenSaas--"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary-new"
+          >
+            Забрать на GitHub
+          </Link>
+          <Link href="/#education" className="btn-secondary-new">
+            Пройти обучение
+          </Link>
+        </div>
       </div>
     </section>
   );

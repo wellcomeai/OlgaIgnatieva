@@ -8,6 +8,8 @@ const navLinks = [
   { href: "/#what-you-get", label: "Что внутри" },
   { href: "/#ai-agents", label: "AI" },
   { href: "/#how-to-start", label: "Как начать" },
+  { href: "/#education", label: "Обучение" },
+  { href: "https://github.com/wellcomeai/OpenSaas--", label: "GitHub", external: true },
 ];
 
 export function PublicHeader() {
@@ -74,10 +76,11 @@ export function PublicHeader() {
 
         {/* Nav */}
         <nav className="hidden md:flex items-center gap-5">
-          {navLinks.map(({ href, label }) => (
+          {navLinks.map(({ href, label, external }) => (
             <Link
               key={href}
               href={href}
+              {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="text-[13px] text-[#616161] no-underline font-normal tracking-tight transition-colors duration-150 hover:text-[#171717]"
             >
               {label}

@@ -7,6 +7,7 @@ import { WhatCanCreate } from "@/components/landing/WhatCanCreate";
 import { WhatInside } from "@/components/landing/WhatInside";
 import { AIAgentsSection } from "@/components/landing/AIAgents";
 import { HowToStartSection } from "@/components/landing/HowToStart";
+import { EducationSection } from "@/components/landing/Education";
 import { ManifestoSection } from "@/components/landing/Manifesto";
 import { CTA } from "@/components/landing/CTA";
 
@@ -22,6 +23,7 @@ export default function LandingPage() {
         <WhatInside />
         <AIAgentsSection />
         <HowToStartSection />
+        <EducationSection />
         <ManifestoSection />
         <CTA />
       </main>

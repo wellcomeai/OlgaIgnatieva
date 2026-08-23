@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Send, Zap } from "lucide-react";
+import { Github, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
 const itemVariants = {
@@ -121,7 +121,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 border border-black/10 rounded-full px-4 py-1.5 text-[13px] text-[#616161] bg-white/80 backdrop-blur-md"
           >
             <Zap size={12} strokeWidth={2.5} />
-            <span>Шаблон + 5 уроков · Запуск за выходные</span>
+            <span>Open Source · MIT · Бесплатно навсегда</span>
           </div>
         </motion.div>
 
@@ -160,9 +160,9 @@ export function Hero() {
             marginBottom: '40px',
           }}
         >
-          Готовый шаблон + видеоуроки по запуску.
+          Открытый шаблон SaaS-платформы — форкай и пользуйся бесплатно.
           <br />
-          Без найма разработчика.
+          Хочешь строить профессиональнее — пройди обучение.
         </motion.p>
 
         {/* CTA buttons */}
@@ -174,18 +174,18 @@ export function Hero() {
           className="flex flex-wrap items-center justify-center gap-3"
           style={{ marginBottom: '64px' }}
         >
-          <Link href="#" className="btn-primary-new">
-            <span aria-hidden>💳</span>
-            Купить за 3000₽
-          </Link>
           <Link
-            href="https://t.me/wellcome_ai"
+            href="https://github.com/wellcomeai/OpenSaas--"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-secondary-new"
+            className="btn-primary-new"
           >
-            <Send size={15} />
-            Автор шаблона
+            <Github size={15} />
+            Забрать на GitHub
+          </Link>
+          <Link href="/#education" className="btn-secondary-new">
+            <span aria-hidden>🎓</span>
+            Пройти обучение
           </Link>
         </motion.div>
 

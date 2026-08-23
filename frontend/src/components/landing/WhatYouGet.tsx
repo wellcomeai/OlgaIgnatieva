@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Box, PlayCircle } from "lucide-react";
+import { Box, BookOpen, Github } from "lucide-react";
 import { motion } from "framer-motion";
 
 const templateItems = [
@@ -12,12 +12,12 @@ const templateItems = [
   "Готов к деплою за 1 день",
 ];
 
-const lessons = [
-  { n: "01", title: "Разворачиваем проект локально" },
-  { n: "02", title: "Деплой на сервер за 30 минут" },
-  { n: "03", title: "Подключаем приём оплаты" },
-  { n: "04", title: "Настраиваем под свой бренд" },
-  { n: "05", title: "Дорабатываем с помощью AI" },
+const extras = [
+  { n: "01", title: "Полный исходный код — лицензия MIT" },
+  { n: "02", title: "Документация по деплою и архитектуре" },
+  { n: "03", title: "CLAUDE.md в каждом модуле — для AI-агентов" },
+  { n: "04", title: "Docker + docker-compose из коробки" },
+  { n: "05", title: "Заготовки Робокассы и Stripe" },
 ];
 
 export function WhatYouGet() {
@@ -86,7 +86,7 @@ export function WhatYouGet() {
               color: "#171717",
             }}
           >
-            Шаблон + уроки — всё для старта
+            Всё это — бесплатно и открыто
           </h2>
         </div>
 
@@ -179,7 +179,7 @@ export function WhatYouGet() {
                 marginBottom: "20px",
               }}
             >
-              <PlayCircle size={24} color="#8b5cf6" strokeWidth={1.75} />
+              <BookOpen size={24} color="#8b5cf6" strokeWidth={1.75} />
             </div>
             <h3
               style={{
@@ -190,7 +190,7 @@ export function WhatYouGet() {
                 marginBottom: "20px",
               }}
             >
-              5 видеоуроков
+              Открытый код и документация
             </h3>
             <ul
               style={{
@@ -202,7 +202,7 @@ export function WhatYouGet() {
                 gap: "12px",
               }}
             >
-              {lessons.map((l) => (
+              {extras.map((l) => (
                 <li
                   key={l.n}
                   style={{
@@ -232,7 +232,7 @@ export function WhatYouGet() {
           </motion.div>
         </div>
 
-        {/* Price + CTA */}
+        {/* Free + CTA */}
         <div
           className="flex flex-wrap items-center justify-center gap-6"
           style={{ textAlign: "center" }}
@@ -245,10 +245,16 @@ export function WhatYouGet() {
               letterSpacing: "-0.02em",
             }}
           >
-            Цена: 3000 ₽
+            Цена: 0 ₽
           </div>
-          <Link href="#" className="btn-primary-new">
-            Купить сейчас →
+          <Link
+            href="https://github.com/wellcomeai/OpenSaas--"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary-new"
+          >
+            <Github size={15} />
+            Забрать на GitHub →
           </Link>
         </div>
       </div>
