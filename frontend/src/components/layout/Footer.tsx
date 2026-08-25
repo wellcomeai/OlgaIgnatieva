@@ -11,7 +11,7 @@ const columns = [
       { label: 'AI', href: '/#ai-agents' },
       { label: 'Как начать', href: '/#how-to-start' },
       { label: 'Обучение', href: '/#education' },
-      { label: 'GitHub', href: 'https://github.com/wellcomeai/OpenSaas--' },
+      { label: 'GitHub', href: 'https://github.com/wellcomeai/OpenSaas--', external: true },
     ],
   },
   {
@@ -85,6 +85,9 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
+                      {...('external' in link && link.external
+                        ? { target: '_blank', rel: 'noopener noreferrer' }
+                        : {})}
                       className="text-sm text-white/65 no-underline transition-colors duration-150 hover:text-white"
                     >
                       {link.label}
