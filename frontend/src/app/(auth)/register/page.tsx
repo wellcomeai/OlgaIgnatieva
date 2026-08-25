@@ -345,6 +345,8 @@ function VerifyCodeForm({
             onKeyDown={(e) => onKeyDown(i, e)}
             style={{
               flex: 1,
+              width: '100%',
+              minWidth: 0,
               height: '52px',
               borderRadius: '12px',
               border: d ? '1.5px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
