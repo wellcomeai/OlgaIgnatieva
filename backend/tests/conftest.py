@@ -23,6 +23,7 @@ from database import AsyncSessionLocal, engine  # noqa: E402
 from main import app  # noqa: E402
 from modules.auth.models import User as AppUser, UserRole  # noqa: E402
 from modules.auth.utils import create_access_token, hash_password  # noqa: E402
+from modules.app_settings.models import AppSetting  # noqa: E402
 from modules.bots import telegram  # noqa: E402
 
 
@@ -107,6 +108,7 @@ async def user():
     yield obj
     async with AsyncSessionLocal() as db:
         await db.execute(delete(AppUser).where(AppUser.id == obj.id))
+        await db.execute(delete(AppSetting))  # настройки глобальные — чистим между тестами
         await db.commit()
     await engine.dispose()  # каждый тест — свой event loop
 

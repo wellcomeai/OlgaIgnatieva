@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 import { botsApi } from "@/api/bots";
 import { productsApi } from "@/api/shop";
+import { flowsApi } from "@/api/flows";
 import { formatRub } from "@/components/shop/price";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +38,8 @@ export function WelcomeEditor({ bot }: { bot: Bot }) {
     queryKey: ["products"],
     queryFn: () => productsApi.list(),
   });
+  const { data: flows = [] } = useQuery({ queryKey: ["flows", bot.id], queryFn: () => flowsApi.list(bot.id) });
+  const replacingFlow = flows.find((f) => f.is_active && f.trigger_kind === "start");
 
   // Сбрасываем форму только когда изменились сохранённые значения: перезапрос
   // бота (например, при возврате на вкладку) не должен стирать правки.
@@ -92,6 +95,15 @@ export function WelcomeEditor({ bot }: { bot: Bot }) {
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
       <div className="space-y-6">
+        {replacingFlow && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            Сейчас на /start отвечает воронка{" "}
+            <Link href={`/flows/${replacingFlow.id}`} className="font-semibold underline">
+              «{replacingFlow.name}»
+            </Link>
+            . Это приветствие отправится, только если её выключить.
+          </div>
+        )}
         <div className="space-y-2">
           <div className="flex items-end justify-between">
             <Label htmlFor="welcome-text">Сообщение на /start</Label>

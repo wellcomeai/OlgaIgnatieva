@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, ChevronDown, FlaskConical, ShieldCheck } from "lucide-react";
 
@@ -57,8 +58,11 @@ export function RobokassaStatus() {
         <div className="mt-4 space-y-3 rounded-xl bg-white/70 p-4">
           {!data.robokassa_configured && (
             <p className="text-sm text-[#3a3a3c]">
-              Укажите на сервере <code>ROBOKASSA_MERCHANT_LOGIN</code>, <code>ROBOKASSA_PASSWORD1</code> и{" "}
-              <code>ROBOKASSA_PASSWORD2</code> из кабинета Робокассы.
+              Введите идентификатор магазина и пароли в разделе{" "}
+              <Link href="/admin/integrations" className="font-semibold text-[#2B2E81] hover:underline">
+                Интеграции
+              </Link>
+              .
             </p>
           )}
           <p className="text-sm text-[#3a3a3c]">

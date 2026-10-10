@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ExternalLink, Link2, MessageSquareText, Settings2, Users } from "lucide-react";
+import { ArrowLeft, ExternalLink, Link2, MessageSquareText, Settings2, Users, Workflow } from "lucide-react";
 
 import { botsApi } from "@/api/bots";
 import { BotAvatar } from "@/components/bots/BotAvatar";
@@ -13,11 +13,13 @@ import { SourceLinks } from "@/components/bots/SourceLinks";
 import { SubscribersTable } from "@/components/bots/SubscribersTable";
 import { WebhookStatusBadge } from "@/components/bots/WebhookStatusBadge";
 import { WelcomeEditor } from "@/components/bots/WelcomeEditor";
+import { FlowsTab } from "@/components/flows/FlowsTab";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 const TABS = [
+  { id: "flows", label: "Воронки", icon: Workflow },
   { id: "welcome", label: "Приветствие", icon: MessageSquareText },
   { id: "links", label: "Ссылки и метки", icon: Link2 },
   { id: "subscribers", label: "Подписчики", icon: Users },
@@ -28,7 +30,9 @@ type TabId = (typeof TABS)[number]["id"];
 
 export default function BotPage() {
   const { id } = useParams<{ id: string }>();
-  const [tab, setTab] = useState<TabId>("welcome");
+  const search = useSearchParams();
+  const initialTab = TABS.find((t) => t.id === search.get("tab"))?.id ?? "flows";
+  const [tab, setTab] = useState<TabId>(initialTab);
   const { data: bot, isLoading, isError } = useQuery({
     queryKey: ["bot", id],
     queryFn: () => botsApi.get(id),
@@ -113,6 +117,7 @@ export default function BotPage() {
       </div>
 
       <div className="rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
+        {tab === "flows" && <FlowsTab bot={bot} />}
         {tab === "welcome" && <WelcomeEditor bot={bot} />}
         {tab === "links" && <SourceLinks bot={bot} />}
         {tab === "subscribers" && <SubscribersTable bot={bot} />}

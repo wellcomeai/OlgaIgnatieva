@@ -8,6 +8,7 @@ import {
   Package,
   Receipt,
   LayoutDashboard,
+  Plug,
   Settings,
   Users,
 } from "lucide-react";
@@ -25,6 +26,7 @@ const userNav = [
 ];
 
 const adminNav = [
+  { href: "/admin/integrations", label: "Интеграции", icon: Plug },
   { href: "/admin/users", label: "Пользователи", icon: Users },
 ];
 

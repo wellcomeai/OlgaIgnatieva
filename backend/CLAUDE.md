@@ -38,6 +38,8 @@ backend/
 │   ├── api_keys/        # генерация/проверка + middleware
 │   ├── bots/            # Telegram-боты (aiogram 3): подключение, вебхук, подписчики
 │   ├── shop/            # продукты, заказы, Робокасса, выдача файлов
+│   ├── flows/           # воронки: граф, движок, планировщик пауз
+│   ├── app_settings/    # настройки из кабинета (Робокасса) поверх .env
 │   ├── notifications/   # in-app уведомления
 │   ├── admin/           # админские операции
 │   ├── rate_limit/      # Redis или PostgreSQL fallback

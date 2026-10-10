@@ -123,4 +123,14 @@ async def deliver_order(order_id: uuid.UUID) -> None:
         else:
             order.delivered_at = datetime.now(timezone.utc)
             order.delivery_error = None
+            await _start_purchase_flows(db, bot_row, subscriber, product)
         await db.commit()
+
+
+async def _start_purchase_flows(db: AsyncSession, bot_row: Bot, subscriber: Subscriber, product: Product) -> None:
+    """Воронки с триггером «после оплаты этого продукта»."""
+    from modules.flows import engine as flows
+
+    tg = tg_bot(bot_row)
+    for flow in await flows.flows_for_purchase(db, bot_row, product.id):
+        await flows.start_flow(tg, db, bot_row, subscriber, flow)

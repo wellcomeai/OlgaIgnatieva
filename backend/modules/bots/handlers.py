@@ -28,6 +28,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from modules.bots.messaging import render_template, send_text
 from modules.bots.models import Bot, Subscriber
 from modules.bots.telegram import TelegramAPIError
+from modules.flows import engine as flows
 from modules.shop import offers
 from modules.shop.models import Product
 
@@ -123,6 +124,10 @@ async def on_start(
     product = await offers.product_from_payload(db, bot_row, payload) if payload else None
     if product is not None:
         await offers.send_offer(bot, db, bot_row, sub, product)
+        return
+    flow = await flows.flow_for_start(db, bot_row, payload)
+    if flow is not None:
+        await flows.start_flow(bot, db, bot_row, sub, flow)
     else:
         await send_welcome(bot, db, bot_row, sub)
 
@@ -147,6 +152,19 @@ async def on_buy(callback: CallbackQuery, bot: TgBot, db: AsyncSession, bot_row:
     await offers.send_offer(bot, db, bot_row, sub, product)
 
 
+@router.callback_query(F.data.startswith(flows.FLOW_CALLBACK))
+async def on_flow_button(callback: CallbackQuery, bot: TgBot, db: AsyncSession, bot_row: Bot) -> None:
+    parsed = flows.parse_callback(callback.data)
+    sub, _ = await upsert_subscriber(db, bot_row, callback.from_user)
+    sub.is_blocked = False
+    await db.flush()
+    ok = parsed is not None and await flows.handle_button(bot, db, bot_row, sub, *parsed)
+    try:
+        await callback.answer(None if ok else "Эта кнопка уже неактивна")
+    except TelegramAPIError as exc:
+        logger.warning("answerCallbackQuery failed: %s", exc.message)
+
+
 @router.my_chat_member()
 async def on_chat_member(event: ChatMemberUpdated, db: AsyncSession, bot_row: Bot) -> None:
     sub, _ = await upsert_subscriber(db, bot_row, event.from_user)
@@ -154,7 +172,18 @@ async def on_chat_member(event: ChatMemberUpdated, db: AsyncSession, bot_row: Bo
 
 
 @router.message()
-async def on_any_message(message: Message, db: AsyncSession, bot_row: Bot) -> None:
-    if message.from_user:
-        sub, _ = await upsert_subscriber(db, bot_row, message.from_user)
-        sub.is_blocked = False
+async def on_any_message(message: Message, bot: TgBot, db: AsyncSession, bot_row: Bot) -> None:
+    if not message.from_user:
+        return
+    sub, _ = await upsert_subscriber(db, bot_row, message.from_user)
+    sub.is_blocked = False
+    await db.flush()
+    text = (message.text or "").strip()
+    if not text:
+        return
+    # Ответ на вопрос воронки важнее ключевых слов
+    if await flows.handle_text(bot, db, bot_row, sub, text):
+        return
+    flow = await flows.flow_for_keyword(db, bot_row, text)
+    if flow is not None:
+        await flows.start_flow(bot, db, bot_row, sub, flow)

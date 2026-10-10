@@ -259,3 +259,100 @@ export interface PaymentsConfig {
   success_url: string;
   fail_url: string;
 }
+
+// ---- Воронки ----
+
+export type FlowNodeType =
+  | "trigger"
+  | "message"
+  | "delay"
+  | "question"
+  | "offer"
+  | "files"
+  | "condition"
+  | "tag";
+
+export type TriggerKind = "start" | "start_label" | "keyword" | "purchase";
+
+export interface FlowButton {
+  id: string;
+  type: "next" | "url";
+  text: string;
+  url?: string;
+}
+
+/** Настройки блока (все поля необязательны — набор зависит от типа). */
+export interface FlowNodeData {
+  title?: string;
+  kind?: string;
+  value?: string;
+  text?: string;
+  buttons?: FlowButton[];
+  amount?: number;
+  unit?: "minutes" | "hours" | "days";
+  var?: string;
+  validate?: "any" | "email" | "phone";
+  product_id?: string | null;
+  tag?: string;
+  action?: "add" | "remove";
+  [key: string]: unknown;
+}
+
+export interface FlowGraphNode {
+  id: string;
+  type: FlowNodeType;
+  position: { x: number; y: number };
+  data: FlowNodeData;
+}
+
+export interface FlowGraphEdge {
+  id: string;
+  source: string;
+  sourceHandle: string;
+  target: string;
+}
+
+export interface FlowGraph {
+  nodes: FlowGraphNode[];
+  edges: FlowGraphEdge[];
+}
+
+export interface FlowSummary {
+  id: UUID;
+  bot_id: UUID;
+  name: string;
+  is_active: boolean;
+  trigger_kind: TriggerKind;
+  trigger_value: string;
+  created_at: string;
+  updated_at: string;
+  entered: number;
+  in_progress: number;
+}
+
+export interface FlowDetail extends FlowSummary {
+  graph: FlowGraph;
+  node_stats: Record<string, number>;
+  problems: string[];
+}
+
+export type FlowTemplate = "blank" | "welcome_sale" | "lead_magnet";
+
+// ---- Настройки интеграций ----
+
+export interface IntegrationField {
+  key: string;
+  label: string;
+  type: "str" | "bool" | "choice";
+  secret: boolean;
+  help: string;
+  choices: { value: string; label: string }[];
+  source: "ui" | "env" | "none";
+  value: string | boolean | null;
+  is_set?: boolean;
+}
+
+export interface IntegrationsState {
+  robokassa: IntegrationField[];
+  urls: PaymentsConfig;
+}

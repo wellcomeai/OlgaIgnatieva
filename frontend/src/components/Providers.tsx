@@ -21,7 +21,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={client}>
       {children}
-      <Toaster position="top-right" richColors closeButton />
+      {/* снизу: сверху уведомления перекрывали кнопки шапки (например, в редакторе воронок) */}
+      <Toaster position="bottom-right" richColors closeButton />
     </QueryClientProvider>
   );
 }

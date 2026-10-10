@@ -9,7 +9,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.v1.router import api_router
 from config import settings
+import asyncio
+
 from modules.bots.telegram import close_session as close_telegram_session
+from modules.flows.scheduler import run_forever as run_flow_scheduler
 
 logging.basicConfig(
     level=logging.INFO,
@@ -25,7 +28,9 @@ async def lifespan(app: FastAPI):
         logger.info("Redis enabled: %s", settings.redis_url)
     else:
         logger.info("Redis disabled — using PostgreSQL fallback for rate limiting")
+    scheduler = asyncio.create_task(run_flow_scheduler())
     yield
+    scheduler.cancel()
     await close_telegram_session()
     logger.info("Shutting down")
 

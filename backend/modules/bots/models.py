@@ -100,6 +100,9 @@ class Subscriber(Base):
     # Метка из ссылки t.me/<bot>?start=<source> при первом входе
     source: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
     is_blocked: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    # Теги и ответы на вопросы воронок
+    tags: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    vars: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
