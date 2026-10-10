@@ -35,9 +35,11 @@ interface TelegramPreviewProps {
   botName: string;
   text: string;
   buttons: WelcomeButton[];
+  /** Подписи кнопок «Купить» (callback-кнопки — без значка ссылки). */
+  productButtons?: string[];
 }
 
-export function TelegramPreview({ botId, botName, text, buttons }: TelegramPreviewProps) {
+export function TelegramPreview({ botId, botName, text, buttons, productButtons = [] }: TelegramPreviewProps) {
   const now = time();
   return (
     <div className="mx-auto w-full max-w-[340px] overflow-hidden rounded-[28px] border-[6px] border-[#1c1c1e] bg-[#1c1c1e] shadow-[0_20px_60px_rgba(43,46,129,0.18)]">
@@ -75,8 +77,16 @@ export function TelegramPreview({ botId, botName, text, buttons }: TelegramPrevi
             )}
             <div className="mt-0.5 text-right text-[10px] text-[#8e8e93]">{now}</div>
           </div>
-          {buttons.length > 0 && (
+          {buttons.length + productButtons.length > 0 && (
             <div className="mt-1 flex flex-col gap-1">
+              {productButtons.map((label, i) => (
+                <div
+                  key={`p${i}`}
+                  className="truncate rounded-xl bg-black/[0.18] px-3 py-2 text-center text-[13px] font-medium text-white backdrop-blur"
+                >
+                  {label}
+                </div>
+              ))}
               {buttons.map((b, i) => (
                 <div
                   key={i}

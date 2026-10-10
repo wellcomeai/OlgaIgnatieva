@@ -1,52 +1,44 @@
-"""Минимальный async-клиент Telegram Bot API поверх httpx."""
+"""Telegram через aiogram 3.
+
+Все боты делят одну HTTP-сессию (сессия aiogram не привязана к токену),
+объекты `aiogram.Bot` создаются на запрос и не закрываются по отдельности.
+Сессия закрывается при остановке приложения (`close_session` в lifespan).
+"""
 from __future__ import annotations
 
-import logging
 import re
-from typing import Any
 
-import httpx
+from aiogram import Bot as TgBot
+from aiogram.client.default import DefaultBotProperties
+from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.client.session.base import BaseSession
+from aiogram.enums import ParseMode
+from aiogram.exceptions import TelegramAPIError
 
-# httpx на уровне INFO пишет URL запроса, а в URL Bot API лежит токен
-logging.getLogger("httpx").setLevel(logging.WARNING)
+__all__ = ["TOKEN_RE", "TelegramAPIError", "close_session", "get_session", "make_bot"]
 
-API_BASE = "https://api.telegram.org"
 TOKEN_RE = re.compile(r"^\d{5,15}:[A-Za-z0-9_-]{30,50}$")
 
-
-class TelegramError(Exception):
-    def __init__(self, description: str, error_code: int | None = None):
-        super().__init__(description)
-        self.description = description
-        self.error_code = error_code
+_session: BaseSession | None = None
 
 
-async def call(token: str, method: str, **params: Any) -> Any:
-    """Вызвать метод Bot API. Бросает TelegramError при ok=false или сетевой ошибке."""
-    payload = {k: v for k, v in params.items() if v is not None}
-    try:
-        async with httpx.AsyncClient(timeout=15) as client:
-            resp = await client.post(f"{API_BASE}/bot{token}/{method}", json=payload)
-    except httpx.HTTPError as exc:
-        raise TelegramError(f"Telegram недоступен ({exc.__class__.__name__})") from exc
-
-    try:
-        data = resp.json()
-    except ValueError as exc:
-        raise TelegramError(f"Некорректный ответ Telegram (HTTP {resp.status_code})") from exc
-
-    if not data.get("ok"):
-        raise TelegramError(
-            data.get("description", "Неизвестная ошибка Telegram"), data.get("error_code")
-        )
-    return data["result"]
+def get_session() -> BaseSession:
+    global _session
+    if _session is None:
+        _session = AiohttpSession()
+    return _session
 
 
-async def download_file(token: str, file_path: str) -> bytes:
-    try:
-        async with httpx.AsyncClient(timeout=15) as client:
-            resp = await client.get(f"{API_BASE}/file/bot{token}/{file_path}")
-            resp.raise_for_status()
-    except httpx.HTTPError as exc:
-        raise TelegramError(f"Не удалось скачать файл ({exc.__class__.__name__})") from exc
-    return resp.content
+def make_bot(token: str) -> TgBot:
+    return TgBot(
+        token,
+        session=get_session(),
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML, link_preview_is_disabled=True),
+    )
+
+
+async def close_session() -> None:
+    global _session
+    if _session is not None:
+        await _session.close()
+        _session = None

@@ -5,6 +5,8 @@ import { BrandLogo } from "@/components/brand/BrandLogo";
 import { usePathname } from "next/navigation";
 import {
   Bot,
+  Package,
+  Receipt,
   Gift,
   LayoutDashboard,
   Settings,
@@ -20,6 +22,8 @@ import { cn } from "@/lib/utils";
 const userNav = [
   { href: "/dashboard", label: "Главная", icon: LayoutDashboard },
   { href: "/bots", label: "Боты", icon: Bot },
+  { href: "/products", label: "Продукты", icon: Package },
+  { href: "/orders", label: "Заказы", icon: Receipt },
   { href: "/settings", label: "Настройки", icon: Settings },
 ];
 

@@ -61,3 +61,6 @@ nginx/certs/
 # Misc
 *.tmp
 *.bak
+
+# Загруженные файлы продуктов (MEDIA_ROOT в dev)
+backend/media/

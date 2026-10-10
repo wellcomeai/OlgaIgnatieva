@@ -10,6 +10,7 @@ from api.v1.internal import (
     billing as billing_router,
     bots as bots_router,
     referrals as referrals_router,
+    shop as shop_router,
     users as users_router,
 )
 from api.v1.public import (
@@ -27,6 +28,7 @@ api_router.include_router(billing_router.router)
 api_router.include_router(referrals_router.router)
 api_router.include_router(api_keys_router.router)
 api_router.include_router(bots_router.router)
+api_router.include_router(shop_router.router)
 api_router.include_router(admin_router.router)
 
 # Public (API key)

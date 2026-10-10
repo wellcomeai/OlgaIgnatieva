@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Bot as BotIcon, CheckCircle2, Plus, Users } from "lucide-react";
+import { ArrowRight, Bot as BotIcon, Plus, ShoppingBag, Users, Wallet } from "lucide-react";
 
 import { botsApi } from "@/api/bots";
+import { ordersApi } from "@/api/shop";
+import { formatRub } from "@/components/shop/price";
 import { EmailBanner } from "@/components/EmailBanner";
 import { BotAvatar } from "@/components/bots/BotAvatar";
 import { WebhookStatusBadge } from "@/components/bots/WebhookStatusBadge";
@@ -18,14 +20,19 @@ export default function DashboardPage() {
     queryFn: () => botsApi.list(),
   });
 
+  const { data: orderStats } = useQuery({
+    queryKey: ["order-stats"],
+    queryFn: () => ordersApi.stats(),
+  });
+
   const subscribers = bots.reduce((acc, b) => acc + b.subscribers_count, 0);
-  const working = bots.filter((b) => b.webhook_status === "ok").length;
   const name = user?.profile?.first_name;
 
   const stats = [
-    { label: "Подписчиков", value: subscribers, icon: Users },
-    { label: "Ботов", value: bots.length, icon: BotIcon },
-    { label: "Работают", value: `${working} из ${bots.length}`, icon: CheckCircle2 },
+    { label: "Выручка за 30 дней", value: formatRub(orderStats?.revenue_30d ?? 0), icon: Wallet, href: "/orders" },
+    { label: "Продаж за 30 дней", value: orderStats?.paid_count_30d ?? 0, icon: ShoppingBag, href: "/orders" },
+    { label: "Подписчиков", value: subscribers, icon: Users, href: "/bots" },
+    { label: "Ботов", value: bots.length, icon: BotIcon, href: "/bots" },
   ];
 
   return (
@@ -34,18 +41,19 @@ export default function DashboardPage() {
         <h1 className="text-[28px] font-extrabold tracking-[-0.025em] text-[#171717]">
           {name ? `Здравствуйте, ${name}!` : "Главная"}
         </h1>
-        <p className="text-sm text-[#8e8e93]">Сводка по вашим ботам</p>
+        <p className="text-sm text-[#8e8e93]">Продажи и боты</p>
       </div>
 
       <EmailBanner />
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((s) => {
           const Icon = s.icon;
           return (
-            <div
+            <Link
               key={s.label}
-              className="flex items-start gap-4 rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.04)]"
+              href={s.href}
+              className="flex items-start gap-4 rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition hover:border-[rgba(6,157,223,0.35)]"
             >
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[rgba(6,157,223,0.1)]">
                 <Icon className="h-5 w-5 text-[#2B2E81]" strokeWidth={1.75} />
@@ -56,7 +64,7 @@ export default function DashboardPage() {
                   {s.value}
                 </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>

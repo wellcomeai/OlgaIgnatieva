@@ -36,7 +36,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    NEXT_TELEMETRY_DISABLED=1
+    NEXT_TELEMETRY_DISABLED=1 \
+    MEDIA_ROOT=/data/media
 
 # ---------------------------------------------------------
 # System packages
@@ -66,7 +67,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         /var/lib/nginx/uwsgi \
         /var/lib/nginx/scgi \
         /var/log/nginx \
-    && chown -R app:app /var/lib/nginx /var/log/nginx
+        /data/media \
+    && chown -R app:app /var/lib/nginx /var/log/nginx /data
 
 
 # =========================================================

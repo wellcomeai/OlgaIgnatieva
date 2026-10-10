@@ -6,11 +6,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import { authApi } from "@/api/auth";
 
 const schema = z.object({
   email: z.string().email("Введите корректный email"),
@@ -20,6 +22,10 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
+  const { data: registration } = useQuery({
+    queryKey: ["registration-status"],
+    queryFn: () => authApi.registrationStatus(),
+  });
   const { login } = useAuth();
   const {
     register,
@@ -113,12 +119,14 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center" style={{ fontSize: '14px', color: '#8e8e93' }}>
-        Нет аккаунта?{" "}
-        <Link href="/register" className="font-semibold text-[#2B2E81] hover:underline">
-          Зарегистрируйтесь
-        </Link>
-      </p>
+      {registration?.enabled && (
+        <p className="mt-6 text-center" style={{ fontSize: '14px', color: '#8e8e93' }}>
+          Нет аккаунта?{" "}
+          <Link href="/register" className="font-semibold text-[#2B2E81] hover:underline">
+            Зарегистрируйтесь
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

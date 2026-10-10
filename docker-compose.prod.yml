@@ -12,6 +12,8 @@ services:
         condition: service_healthy
     ports:
       - "8000:8000"
+    volumes:
+      - media_data:/data/media
     restart: unless-stopped
 
   frontend:
@@ -67,3 +69,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  media_data:

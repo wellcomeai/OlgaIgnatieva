@@ -70,3 +70,6 @@ Dockerfile*
 *.tmp
 *.bak
 nginx/certs
+
+media/
+backend/media/

@@ -19,6 +19,7 @@ class BotConnect(BaseModel):
 class BotUpdate(BaseModel):
     welcome_text: str | None = Field(default=None, min_length=1, max_length=4096)
     welcome_buttons: list[WelcomeButton] | None = Field(default=None, max_length=8)
+    welcome_product_ids: list[UUID] | None = Field(default=None, max_length=8)
     is_active: bool | None = None
 
 
@@ -34,6 +35,7 @@ class BotPublic(BaseModel):
     webhook_error: str | None = None
     welcome_text: str
     welcome_buttons: list[WelcomeButton]
+    welcome_product_ids: list[UUID]
     last_update_at: datetime | None = None
     created_at: datetime
     subscribers_count: int = 0

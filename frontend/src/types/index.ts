@@ -140,6 +140,7 @@ export interface Bot {
   webhook_error: string | null;
   welcome_text: string;
   welcome_buttons: WelcomeButton[];
+  welcome_product_ids: UUID[];
   last_update_at: string | null;
   created_at: string;
   subscribers_count: number;
@@ -148,6 +149,7 @@ export interface Bot {
 export interface BotUpdate {
   welcome_text?: string;
   welcome_buttons?: WelcomeButton[];
+  welcome_product_ids?: UUID[];
   is_active?: boolean;
 }
 
@@ -179,4 +181,81 @@ export interface BotSubscriberPage {
 export interface BotSourceStat {
   source: string | null;
   count: number;
+}
+
+// ---- Продукты и заказы ----
+
+export interface ProductFile {
+  id: UUID;
+  filename: string;
+  content_type: string;
+  size: number;
+  created_at: string;
+}
+
+export interface Product {
+  id: UUID;
+  title: string;
+  description: string;
+  price: string;
+  delivery_message: string;
+  protect_content: boolean;
+  is_active: boolean;
+  created_at: string;
+  files_count: number;
+  sales_count: number;
+  revenue: string;
+}
+
+export interface ProductDetail extends Product {
+  files: ProductFile[];
+  buy_links: string[];
+}
+
+export interface ProductUpdate {
+  title?: string;
+  price?: string;
+  description?: string;
+  delivery_message?: string;
+  protect_content?: boolean;
+  is_active?: boolean;
+}
+
+export type OrderStatus = "pending" | "paid";
+
+export interface Order {
+  id: UUID;
+  inv_id: number;
+  product_id: UUID | null;
+  product_title: string;
+  amount: string;
+  status: OrderStatus;
+  paid_at: string | null;
+  delivered_at: string | null;
+  delivery_error: string | null;
+  created_at: string;
+  bot_username: string | null;
+  subscriber_name: string | null;
+  subscriber_username: string | null;
+}
+
+export interface OrderPage {
+  items: Order[];
+  total: number;
+}
+
+export interface OrderStats {
+  revenue: string;
+  paid_count: number;
+  revenue_30d: string;
+  paid_count_30d: number;
+}
+
+export interface PaymentsConfig {
+  robokassa_configured: boolean;
+  test_mode: boolean;
+  receipt_enabled: boolean;
+  result_url: string;
+  success_url: string;
+  fail_url: string;
 }

@@ -36,7 +36,8 @@ backend/
 │   ├── billing/         # планы, подписки, платежи, Robokassa/Stripe
 │   ├── referrals/       # коды, ссылки, выплаты
 │   ├── api_keys/        # генерация/проверка + middleware
-│   ├── bots/            # Telegram-боты: подключение, вебхук, подписчики
+│   ├── bots/            # Telegram-боты (aiogram 3): подключение, вебхук, подписчики
+│   ├── shop/            # продукты, заказы, Робокасса, выдача файлов
 │   ├── notifications/   # in-app уведомления
 │   ├── admin/           # админские операции
 │   ├── rate_limit/      # Redis или PostgreSQL fallback

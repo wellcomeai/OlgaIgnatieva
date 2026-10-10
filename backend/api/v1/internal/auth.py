@@ -37,12 +37,20 @@ from modules.email import service as email_service
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
+@router.get("/registration")
+async def registration_status() -> dict[str, bool]:
+    """Открыта ли регистрация (фронтенд прячет/показывает форму)."""
+    return {"enabled": settings.registration_enabled}
+
+
 @router.post("/register", response_model=AuthResponse)
 async def register(
     payload: RegisterRequest,
     bg: BackgroundTasks,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
+    if not settings.registration_enabled:
+        raise HTTPException(status_code=403, detail="Регистрация закрыта")
     user, access, refresh, code = await auth_service.register_user(db, payload)
     bg.add_task(email_service.send_verification_code_email, user.email, code)
     return AuthResponse(

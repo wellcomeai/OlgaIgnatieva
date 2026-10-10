@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Form, HTTPException, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
+from fastapi.responses import PlainTextResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,25 +14,41 @@ from modules.billing.models import Payment, PaymentStatus
 from modules.email import service as email_service
 from modules.referrals import service as ref_service
 from modules.billing.robokassa import verify_result_signature
+from modules.shop import delivery as shop_delivery
 
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 
 
-@router.post("/robokassa")
+@router.post("/robokassa", response_class=PlainTextResponse)
 async def robokassa_webhook(
+    request: Request,
     bg: BackgroundTasks,
     db: Annotated[AsyncSession, Depends(get_db)],
-    OutSum: Annotated[str, Form()],
-    InvId: Annotated[str, Form()],
-    SignatureValue: Annotated[str, Form()],
 ):
     """Робокасса Result URL.
 
-    Робокасса присылает x-www-form-urlencoded с OutSum, InvId, SignatureValue.
+    Робокасса присылает x-www-form-urlencoded с OutSum, InvId, SignatureValue
+    и пользовательскими Shp_*-параметрами (входят в подпись).
     Ответ должен быть строкой `OK<InvId>` для подтверждения.
+
+    `Shp_kind=order` — заказ продукта в Telegram-боте (modules/shop),
+    иначе — оплата подписки на тариф (modules/billing).
     """
-    if not verify_result_signature(OutSum, InvId, SignatureValue):
+    form = await request.form()
+    OutSum = str(form.get("OutSum", ""))
+    InvId = str(form.get("InvId", ""))
+    SignatureValue = str(form.get("SignatureValue", ""))
+    shp = {k: str(v) for k, v in form.items() if k.startswith("Shp_")}
+    if not (OutSum and InvId and SignatureValue):
+        raise HTTPException(status_code=400, detail="Missing fields")
+    if not verify_result_signature(OutSum, InvId, SignatureValue, shp):
         raise HTTPException(status_code=400, detail="Invalid signature")
+
+    if shp.get("Shp_kind") == "order":
+        order, newly_paid = await shop_delivery.mark_paid(db, InvId, OutSum)
+        if newly_paid:
+            bg.add_task(shop_delivery.deliver_order, order.id)
+        return f"OK{InvId}"
 
     payment = await db.scalar(
         select(Payment).where(Payment.provider_payment_id == InvId)

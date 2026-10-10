@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.v1.router import api_router
 from config import settings
+from modules.bots.telegram import close_session as close_telegram_session
 
 logging.basicConfig(
     level=logging.INFO,
@@ -25,6 +26,7 @@ async def lifespan(app: FastAPI):
     else:
         logger.info("Redis disabled — using PostgreSQL fallback for rate limiting")
     yield
+    await close_telegram_session()
     logger.info("Shutting down")
 
 
@@ -33,7 +35,7 @@ _is_production = settings.environment.lower() == "production"
 app = FastAPI(
     title=settings.app_name,
     version="1.0.0",
-    description="OpenSaaS — open source SaaS boilerplate",
+    description="VisaNews2U — Telegram-боты, воронки и продажа файлов",
     lifespan=lifespan,
     docs_url=None if _is_production else "/docs",
     redoc_url=None if _is_production else "/redoc",

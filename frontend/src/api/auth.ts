@@ -23,6 +23,11 @@ export const authApi = {
     return r.data;
   },
 
+  async registrationStatus(): Promise<{ enabled: boolean }> {
+    const r = await apiClient.get("/api/v1/auth/registration");
+    return r.data;
+  },
+
   async logout(): Promise<void> {
     await apiClient.post("/api/v1/auth/logout");
   },

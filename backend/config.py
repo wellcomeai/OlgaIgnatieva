@@ -58,6 +58,12 @@ class Settings(BaseSettings):
     robokassa_password1: str = Field(default="")
     robokassa_password2: str = Field(default="")
     robokassa_test_mode: bool = Field(default=True)
+    # Передавать чек 54-ФЗ (Receipt) в ссылке на оплату. Нужен, если касса
+    # Робокассы не подставляет номенклатуру из настроек магазина сама.
+    robokassa_receipt_enabled: bool = Field(default=False)
+    robokassa_tax: str = Field(default="none")  # none | vat0 | vat10 | vat20 ...
+    robokassa_sno: str = Field(default="")  # osn | usn_income | npd ... (пусто — из настроек магазина)
+    robokassa_payment_object: str = Field(default="service")  # service | commodity
 
     # === Stripe ===
     stripe_secret_key: str = Field(default="")
@@ -70,6 +76,14 @@ class Settings(BaseSettings):
     api_url: str = Field(default="http://localhost:8000")
     environment: str = Field(default="development")
     cors_origins: str = Field(default="http://localhost:3000")
+
+    # === Доступ ===
+    # Платформа личная: регистрация закрыта, владелец создаётся из
+    # ADMIN_EMAIL / ADMIN_PASSWORD скриптом scripts/create_admin.py.
+    registration_enabled: bool = Field(default=False)
+
+    # === Файлы продуктов ===
+    media_root: str = Field(default="media")
 
     # === Telegram ===
     # Публичный HTTPS-адрес, на который Telegram шлёт апдейты ботов.
@@ -125,8 +139,13 @@ class Settings(BaseSettings):
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
     @property
-    def telegram_webhook_base(self) -> str:
+    def public_base_url(self) -> str:
+        """Публичный адрес платформы для внешних сервисов (Telegram, Робокасса)."""
         return (self.telegram_webhook_base_url or self.app_url).rstrip("/")
+
+    @property
+    def telegram_webhook_base(self) -> str:
+        return self.public_base_url
 
     @property
     def redis_enabled(self) -> bool:

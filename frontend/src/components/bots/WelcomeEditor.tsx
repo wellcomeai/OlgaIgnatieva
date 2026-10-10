@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bold, Italic, Link2, Loader2, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { botsApi } from "@/api/bots";
+import { productsApi } from "@/api/shop";
+import { formatRub } from "@/components/shop/price";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,14 +31,28 @@ export function WelcomeEditor({ bot }: { bot: Bot }) {
   const textRef = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState(bot.welcome_text);
   const [buttons, setButtons] = useState<WelcomeButton[]>(bot.welcome_buttons);
+  const [productIds, setProductIds] = useState<string[]>(bot.welcome_product_ids);
 
+  const { data: products = [] } = useQuery({
+    queryKey: ["products"],
+    queryFn: () => productsApi.list(),
+  });
+
+  // Сбрасываем форму только когда изменились сохранённые значения: перезапрос
+  // бота (например, при возврате на вкладку) не должен стирать правки.
+  const savedKey = JSON.stringify([bot.welcome_text, bot.welcome_buttons, bot.welcome_product_ids]);
   useEffect(() => {
-    setText(bot.welcome_text);
-    setButtons(bot.welcome_buttons);
-  }, [bot.welcome_text, bot.welcome_buttons]);
+    const [t, b, p] = JSON.parse(savedKey);
+    setText(t);
+    setButtons(b);
+    setProductIds(p);
+  }, [savedKey]);
 
-  const dirty =
-    text !== bot.welcome_text || JSON.stringify(buttons) !== JSON.stringify(bot.welcome_buttons);
+  const dirty = JSON.stringify([text, buttons, productIds]) !== savedKey;
+  const productButtons = productIds
+    .map((id) => products.find((p) => p.id === id))
+    .filter((p) => p && p.is_active)
+    .map((p) => `🛒 ${p!.title} — ${formatRub(p!.price)}`);
   const buttonErrors = buttons.map((b) =>
     !b.text.trim() ? "Введите текст" : !URL_RE.test(b.url.trim()) ? "Ссылка должна начинаться с https://" : null,
   );
@@ -46,6 +63,7 @@ export function WelcomeEditor({ bot }: { bot: Bot }) {
       botsApi.update(bot.id, {
         welcome_text: text,
         welcome_buttons: buttons.map((b) => ({ text: b.text.trim(), url: b.url.trim() })),
+        welcome_product_ids: productIds,
       }),
     onSuccess: (updated) => {
       qc.setQueryData(["bot", bot.id], updated);
@@ -118,6 +136,53 @@ export function WelcomeEditor({ bot }: { bot: Bot }) {
         </div>
 
         <div className="space-y-3">
+          <Label>Кнопки «Купить»</Label>
+          {products.length === 0 ? (
+            <p className="text-sm text-[#8e8e93]">
+              Пока нет продуктов.{" "}
+              <Link href="/products" className="font-medium text-[#2B2E81] hover:underline">
+                Создайте продукт
+              </Link>
+              , и здесь можно будет добавить кнопку покупки.
+            </p>
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {products.map((p) => {
+                const checked = productIds.includes(p.id);
+                return (
+                  <label
+                    key={p.id}
+                    className={
+                      checked
+                        ? "flex cursor-pointer items-center gap-3 rounded-xl border border-[#069DDF] bg-[rgba(6,157,223,0.05)] px-3 py-2.5"
+                        : "flex cursor-pointer items-center gap-3 rounded-xl border border-black/[0.08] px-3 py-2.5 hover:border-black/[0.15]"
+                    }
+                  >
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-[#2B2E81]"
+                      checked={checked}
+                      onChange={(e) =>
+                        setProductIds((ids) =>
+                          e.target.checked ? [...ids, p.id] : ids.filter((x) => x !== p.id),
+                        )
+                      }
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium">{p.title}</span>
+                      <span className="block text-xs text-[#8e8e93]">
+                        {formatRub(p.price)}
+                        {!p.is_active && " · снят с продажи"}
+                      </span>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Label>Кнопки-ссылки</Label>
             <span className="text-xs text-[#8e8e93]">
@@ -178,6 +243,7 @@ export function WelcomeEditor({ bot }: { bot: Bot }) {
               onClick={() => {
                 setText(bot.welcome_text);
                 setButtons(bot.welcome_buttons);
+                setProductIds(bot.welcome_product_ids);
               }}
             >
               Отменить
@@ -191,7 +257,13 @@ export function WelcomeEditor({ bot }: { bot: Bot }) {
         <div className="mb-3 text-center text-xs font-medium uppercase tracking-wider text-[#8e8e93]">
           Так увидит подписчик
         </div>
-        <TelegramPreview botId={bot.id} botName={bot.first_name} text={text} buttons={buttons} />
+        <TelegramPreview
+          botId={bot.id}
+          botName={bot.first_name}
+          text={text}
+          buttons={buttons}
+          productButtons={productButtons}
+        />
       </div>
     </div>
   );

@@ -8,6 +8,8 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2, Lock } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +46,42 @@ interface PendingState {
 }
 
 export default function RegisterPage() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["registration-status"],
+    queryFn: () => authApi.registrationStatus(),
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-16">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+  if (!data?.enabled) return <RegistrationClosed />;
+  return <RegisterForm />;
+}
+
+function RegistrationClosed() {
+  return (
+    <div className="text-center">
+      <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(6,157,223,0.1)]">
+        <Lock className="h-5 w-5 text-[#2B2E81]" />
+      </div>
+      <h1 className="text-[26px] font-extrabold tracking-[-0.025em] text-[#171717]">
+        Регистрация закрыта
+      </h1>
+      <p className="mt-2 text-sm text-[#8e8e93]">
+        Это личная платформа. Если у вас есть доступ — войдите в аккаунт.
+      </p>
+      <Button asChild className="mt-6 w-full" style={{ height: "46px", fontWeight: 600 }}>
+        <Link href="/login">Войти</Link>
+      </Button>
+    </div>
+  );
+}
+
+function RegisterForm() {
   const { register: registerUser } = useAuth();
   const [refCode, setRefCode] = useState<string | null>(null);
   const [pending, setPending] = useState<PendingState | null>(null);

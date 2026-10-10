@@ -61,6 +61,8 @@ class Bot(Base):
     )
     # [{"text": "...", "url": "https://..."}]
     welcome_buttons: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    # id продуктов (str), кнопки «Купить» которых показываются в приветствии
+    welcome_product_ids: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
     last_update_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )

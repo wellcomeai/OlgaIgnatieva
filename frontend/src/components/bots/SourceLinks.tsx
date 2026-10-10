@@ -2,35 +2,16 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Check, Copy, Link2 } from "lucide-react";
-import { toast } from "sonner";
+import { Link2 } from "lucide-react";
 
 import { botsApi } from "@/api/bots";
+import { CopyButton } from "@/components/ui/copy-button";
 import { Input } from "@/components/ui/input";
 import type { Bot } from "@/types";
 
 /** Telegram допускает в start-параметре только A-Z a-z 0-9 _ - (до 64 символов). */
 function toLabel(value: string): string {
   return value.replace(/[^A-Za-z0-9_-]/g, "").slice(0, 64);
-}
-
-function CopyButton({ value }: { value: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      type="button"
-      onClick={async () => {
-        await navigator.clipboard.writeText(value);
-        setCopied(true);
-        toast.success("Ссылка скопирована");
-        setTimeout(() => setCopied(false), 1500);
-      }}
-      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#8e8e93] transition hover:bg-black/[0.05] hover:text-[#2B2E81]"
-      aria-label="Скопировать"
-    >
-      {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
-    </button>
-  );
 }
 
 const SUGGESTIONS = ["instagram", "reels", "youtube", "stories", "channel"];
@@ -79,7 +60,7 @@ export function SourceLinks({ bot }: { bot: Bot }) {
         <div className="flex items-center gap-2 rounded-xl border border-[rgba(6,157,223,0.25)] bg-[rgba(6,157,223,0.05)] px-3 py-2">
           <Link2 className="h-4 w-4 shrink-0 text-[#069DDF]" />
           <span className="min-w-0 flex-1 truncate font-mono text-[13px] text-[#2B2E81]">{link}</span>
-          <CopyButton value={link} />
+          <CopyButton value={link} message="Ссылка скопирована" />
         </div>
       </div>
 
@@ -98,7 +79,9 @@ export function SourceLinks({ bot }: { bot: Bot }) {
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-1 font-medium">
                       {s.source ?? <span className="text-[#8e8e93]">без метки</span>}
-                      {s.source && <CopyButton value={`${base}?start=${s.source}`} />}
+                      {s.source && (
+                        <CopyButton value={`${base}?start=${s.source}`} message="Ссылка скопирована" />
+                      )}
                     </span>
                     <span className="tabular-nums text-[#636366]">
                       {s.count} · {pct}%

@@ -4,7 +4,6 @@ from __future__ import annotations
 import logging
 import secrets
 import time
-from datetime import datetime, timezone
 from typing import Sequence
 from uuid import UUID
 
@@ -14,10 +13,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import settings
 from modules.auth.models import User
-from modules.bots import telegram
+from aiogram import Bot as TgBot
+from aiogram.exceptions import TelegramNotFound, TelegramUnauthorizedError
+
 from modules.bots.crypto import decrypt_token, encrypt_token
 from modules.bots.models import Bot, Subscriber, WebhookStatus
 from modules.bots.schemas import BotUpdate, SourceStat, WebhookInfo
+from modules.bots.telegram import TOKEN_RE, TelegramAPIError, make_bot
+from modules.shop.models import Product
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +29,11 @@ ALLOWED_UPDATES = ["message", "callback_query", "my_chat_member"]
 
 def bot_token(bot: Bot) -> str:
     return decrypt_token(bot.token_encrypted)
+
+
+def tg_bot(bot: Bot) -> TgBot:
+    """aiogram-клиент для сохранённого бота."""
+    return make_bot(bot_token(bot))
 
 
 def webhook_url(bot: Bot) -> str:
@@ -42,16 +50,14 @@ async def setup_webhook(bot: Bot) -> None:
         )
         return
     try:
-        await telegram.call(
-            bot_token(bot),
-            "setWebhook",
+        await tg_bot(bot).set_webhook(
             url=webhook_url(bot),
             secret_token=bot.webhook_secret,
             allowed_updates=ALLOWED_UPDATES,
         )
-    except telegram.TelegramError as exc:
+    except TelegramAPIError as exc:
         bot.webhook_status = WebhookStatus.ERROR
-        bot.webhook_error = exc.description
+        bot.webhook_error = exc.message
         return
     bot.webhook_status = WebhookStatus.OK
     bot.webhook_error = None
@@ -59,40 +65,41 @@ async def setup_webhook(bot: Bot) -> None:
 
 async def _remove_webhook(bot: Bot) -> None:
     try:
-        await telegram.call(bot_token(bot), "deleteWebhook")
-    except telegram.TelegramError as exc:
-        logger.warning("deleteWebhook failed for bot %s: %s", bot.id, exc.description)
+        await tg_bot(bot).delete_webhook()
+    except TelegramAPIError as exc:
+        logger.warning("deleteWebhook failed for bot %s: %s", bot.id, exc.message)
 
 
 async def connect_bot(db: AsyncSession, user: User, token: str) -> Bot:
     token = token.strip()
-    if not telegram.TOKEN_RE.match(token):
+    if not TOKEN_RE.match(token):
         raise HTTPException(
             status_code=422,
             detail="Неверный формат токена. Он выглядит так: 123456789:AAH...",
         )
     try:
-        me = await telegram.call(token, "getMe")
-    except telegram.TelegramError as exc:
-        if exc.error_code in (401, 404):
-            raise HTTPException(
-                status_code=400,
-                detail="Telegram не принял токен. Скопируйте его из @BotFather ещё раз.",
-            ) from exc
-        raise HTTPException(status_code=502, detail=exc.description) from exc
+        me = await make_bot(token).get_me()
+    except (TelegramUnauthorizedError, TelegramNotFound) as exc:
+        raise HTTPException(
+            status_code=400,
+            detail="Telegram не принял токен. Скопируйте его из @BotFather ещё раз.",
+        ) from exc
+    except TelegramAPIError as exc:
+        raise HTTPException(status_code=502, detail=exc.message) from exc
 
-    existing = await db.scalar(select(Bot).where(Bot.tg_bot_id == me["id"]))
+    existing = await db.scalar(select(Bot).where(Bot.tg_bot_id == me.id))
     if existing is not None:
-        raise HTTPException(status_code=409, detail=f"Бот @{me['username']} уже подключён")
+        raise HTTPException(status_code=409, detail=f"Бот @{me.username} уже подключён")
 
     bot = Bot(
         user_id=user.id,
-        tg_bot_id=me["id"],
-        username=me["username"],
-        first_name=me.get("first_name") or me["username"],
+        tg_bot_id=me.id,
+        username=me.username or str(me.id),
+        first_name=me.first_name or me.username or str(me.id),
         token_encrypted=encrypt_token(token),
         webhook_secret=secrets.token_urlsafe(32),
         welcome_buttons=[],
+        welcome_product_ids=[],
     )
     db.add(bot)
     await db.flush()  # нужен bot.id для URL вебхука
@@ -139,6 +146,18 @@ async def update_bot(db: AsyncSession, bot: Bot, payload: BotUpdate) -> Bot:
         bot.welcome_text = payload.welcome_text
     if payload.welcome_buttons is not None:
         bot.welcome_buttons = [b.model_dump() for b in payload.welcome_buttons]
+    if payload.welcome_product_ids is not None:
+        ids = list(dict.fromkeys(payload.welcome_product_ids))
+        found = set(
+            (
+                await db.scalars(
+                    select(Product.id).where(Product.id.in_(ids), Product.user_id == bot.user_id)
+                )
+            ).all()
+        )
+        if len(found) != len(ids):
+            raise HTTPException(status_code=422, detail="Продукт не найден")
+        bot.welcome_product_ids = [str(i) for i in ids]
     if payload.is_active is not None and payload.is_active != bot.is_active:
         bot.is_active = payload.is_active
         if bot.is_active:
@@ -163,15 +182,14 @@ async def refresh_webhook(db: AsyncSession, bot: Bot) -> Bot:
 
 async def webhook_info(bot: Bot) -> WebhookInfo:
     try:
-        info = await telegram.call(bot_token(bot), "getWebhookInfo")
-    except telegram.TelegramError as exc:
-        raise HTTPException(status_code=502, detail=exc.description) from exc
-    err_date = info.get("last_error_date")
+        info = await tg_bot(bot).get_webhook_info()
+    except TelegramAPIError as exc:
+        raise HTTPException(status_code=502, detail=exc.message) from exc
     return WebhookInfo(
-        url_set=info.get("url") == webhook_url(bot),
-        pending_update_count=info.get("pending_update_count", 0),
-        last_error_message=info.get("last_error_message"),
-        last_error_date=datetime.fromtimestamp(err_date, timezone.utc) if err_date else None,
+        url_set=info.url == webhook_url(bot),
+        pending_update_count=info.pending_update_count,
+        last_error_message=info.last_error_message,
+        last_error_date=info.last_error_date,
     )
 
 
@@ -227,17 +245,15 @@ async def get_avatar(bot: Bot) -> bytes | None:
     if cached and time.monotonic() - cached[0] < _AVATAR_TTL:
         return cached[1]
     data: bytes | None = None
-    token = bot_token(bot)
+    tg = tg_bot(bot)
     try:
-        photos = await telegram.call(
-            token, "getUserProfilePhotos", user_id=bot.tg_bot_id, limit=1
-        )
-        if photos.get("photos"):
-            smallest = photos["photos"][0][0]
-            file = await telegram.call(token, "getFile", file_id=smallest["file_id"])
-            data = await telegram.download_file(token, file["file_path"])
-    except telegram.TelegramError as exc:
-        logger.info("avatar fetch failed for bot %s: %s", bot.id, exc.description)
+        photos = await tg.get_user_profile_photos(user_id=bot.tg_bot_id, limit=1)
+        if photos.photos:
+            smallest = photos.photos[0][0]
+            buf = await tg.download(smallest.file_id)
+            data = buf.read() if buf else None
+    except TelegramAPIError as exc:
+        logger.info("avatar fetch failed for bot %s: %s", bot.id, exc.message)
         return None  # не кешируем сетевые ошибки
     _avatar_cache[bot.id] = (time.monotonic(), data)
     return data

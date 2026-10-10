@@ -24,9 +24,12 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgresql+asyncpg://opensaas:password@postgres:5432/opensaas_db
+    volumes:
+      - media_local:/data/media
     depends_on:
       postgres:
         condition: service_healthy
 
 volumes:
   postgres_local:
+  media_local:

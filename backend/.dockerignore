@@ -47,3 +47,6 @@ docker-compose*.yml
 *.bak
 *.log
 CLAUDE.md
+
+media/
+backend/media/
