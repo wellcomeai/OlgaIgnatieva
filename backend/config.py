@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     smtp_user: str = Field(default="")
     smtp_password: str = Field(default="")
     smtp_from_email: str = Field(default="noreply@example.com")
-    smtp_from_name: str = Field(default="OpenSaaS")
+    smtp_from_name: str = Field(default="VisaNews2U")
     smtp_use_tls: bool = Field(default=True)
 
     # === Робокасса ===
@@ -65,7 +65,7 @@ class Settings(BaseSettings):
     stripe_enabled: bool = Field(default=False)
 
     # === App ===
-    app_name: str = Field(default="OpenSaaS")
+    app_name: str = Field(default="VisaNews2U")
     app_url: str = Field(default="http://localhost:3000")
     api_url: str = Field(default="http://localhost:8000")
     environment: str = Field(default="development")

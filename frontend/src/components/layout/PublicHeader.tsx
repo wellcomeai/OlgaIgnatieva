@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 const navLinks = [
   { href: "/#what-you-get", label: "Что внутри" },
@@ -23,7 +23,7 @@ export function PublicHeader() {
   const baseShadow = scrolled
     ? '0 8px 32px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.5) inset'
     : '0 2px 12px rgba(0,0,0,0.05), 0 0 0 1px rgba(255,255,255,0.5) inset';
-  const hoverShadow = '0 14px 40px rgba(0,102,255,0.18), 0 0 0 1px rgba(0,102,255,0.18) inset';
+  const hoverShadow = '0 14px 40px rgba(6,157,223,0.18), 0 0 0 1px rgba(6,157,223,0.18) inset';
 
   return (
     <header
@@ -40,7 +40,7 @@ export function PublicHeader() {
         transition: 'box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease, border-color 0.3s ease',
         background: hovered ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.88)',
         backdropFilter: 'blur(24px) saturate(180%)',
-        border: hovered ? '1px solid rgba(0,102,255,0.18)' : '1px solid rgba(0,0,0,0.08)',
+        border: hovered ? '1px solid rgba(6,157,223,0.18)' : '1px solid rgba(0,0,0,0.08)',
         boxShadow: hovered ? hoverShadow : baseShadow,
         transform: hovered ? 'translateY(-1px)' : 'translateY(0)',
       }}
@@ -51,25 +51,7 @@ export function PublicHeader() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2" style={{ textDecoration: 'none' }}>
-          <Image
-            src="/logo.png"
-            alt="OpenSaaS"
-            width={26}
-            height={26}
-            style={{ borderRadius: '7px' }}
-            priority
-          />
-          <span
-            style={{
-              fontFamily: 'Geist, sans-serif',
-              fontWeight: 700,
-              fontSize: '15px',
-              color: '#171717',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            OpenSaaS
-          </span>
+          <BrandLogo size={30} priority />
         </Link>
 
         {/* Nav */}
@@ -99,11 +81,11 @@ export function PublicHeader() {
           <Link href="/register" className="no-underline">
             <button
               type="button"
-              className="text-white text-[13px] font-semibold px-3.5 h-8 rounded-[9px] cursor-pointer tracking-tight transition-all duration-200 hover:bg-[#0052CC] hover:shadow-[0_4px_14px_rgba(0,102,255,0.4)]"
+              className="text-white text-[13px] font-semibold px-3.5 h-8 rounded-[9px] cursor-pointer tracking-tight transition-all duration-200 hover:bg-[#22256B] hover:shadow-[0_4px_14px_rgba(6,157,223,0.4)]"
               style={{
-                background: '#0066FF',
+                background: '#2B2E81',
                 border: 'none',
-                boxShadow: '0 2px 8px rgba(0,102,255,0.3)',
+                boxShadow: '0 2px 8px rgba(6,157,223,0.3)',
               }}
             >
               Регистрация

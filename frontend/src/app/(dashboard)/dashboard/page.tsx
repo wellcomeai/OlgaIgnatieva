@@ -21,8 +21,8 @@ export default function DashboardPage() {
       value: formatMoney(stats?.total_earned ?? 0),
       sub: `Приглашено: ${stats?.total_referred ?? 0}`,
       icon: TrendingUp,
-      color: '#0066FF',
-      bg: 'rgba(0,102,255,0.08)',
+      color: '#2B2E81',
+      bg: 'rgba(6,157,223,0.08)',
     },
     {
       label: "Ожидает выплаты",
@@ -35,7 +35,7 @@ export default function DashboardPage() {
   ];
 
   const quickActions = [
-    { href: "/billing",   icon: CreditCard, label: "Подписка",   color: '#0066FF', bg: 'rgba(0,102,255,0.08)' },
+    { href: "/billing",   icon: CreditCard, label: "Подписка",   color: '#2B2E81', bg: 'rgba(6,157,223,0.08)' },
     { href: "/referrals", icon: Gift,       label: "Рефералы",   color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
     { href: "/settings",  icon: Settings,   label: "Настройки",  color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
   ];
@@ -187,7 +187,7 @@ export default function DashboardPage() {
 
       <style jsx>{`
         .quick-action-card:hover {
-          border-color: rgba(0, 102, 255, 0.2);
+          border-color: rgba(6, 157, 223, 0.2);
           background: white;
           transform: translateY(-1px);
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);

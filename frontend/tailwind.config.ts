@@ -40,7 +40,7 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "apple-blue": "#0066FF",
+        "apple-blue": "#2B2E81",
         "apple-gray": "#f5f5f7",
         "apple-dark": "#1d1d1f",
       },
@@ -78,8 +78,8 @@ const config: Config = {
           '50%': { transform: 'translateY(-8px)' },
         },
         'pulse-glow': {
-          '0%, 100%': { boxShadow: '0 0 0 0 rgba(0, 102, 255, 0.3)' },
-          '50%': { boxShadow: '0 0 0 8px rgba(0, 102, 255, 0)' },
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(6, 157, 223, 0.3)' },
+          '50%': { boxShadow: '0 0 0 8px rgba(6, 157, 223, 0)' },
         },
         'gradient-shift': {
           '0%': { backgroundPosition: '0% 50%' },

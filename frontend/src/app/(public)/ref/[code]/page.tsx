@@ -25,7 +25,7 @@ export default function ReferralLandingPage() {
           Реферальное приглашение
         </div>
         <h1 className="mt-3 text-3xl font-bold">
-          Вас пригласили в OpenSaaS
+          Вас пригласили в VisaNews2U
         </h1>
         <p className="mt-3 text-muted-foreground">
           Зарегистрируйтесь по коду <span className="font-mono font-medium">{code}</span> и получите 3 дня бесплатного триала.

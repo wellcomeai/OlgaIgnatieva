@@ -22,7 +22,7 @@ export function PlanCard({ plan, active, loading, onSubscribe }: Props) {
         borderRadius: '20px',
         padding: '28px',
         boxShadow: active
-          ? '0 16px 48px rgba(0,102,255,0.25)'
+          ? '0 16px 48px rgba(6,157,223,0.25)'
           : '0 2px 12px rgba(0,0,0,0.04)',
         transition: 'all 0.3s ease',
       }}
@@ -90,14 +90,14 @@ export function PlanCard({ plan, active, loading, onSubscribe }: Props) {
                 width: '18px',
                 height: '18px',
                 borderRadius: '50%',
-                background: active ? 'rgba(255,255,255,0.2)' : 'rgba(0,102,255,0.1)',
+                background: active ? 'rgba(255,255,255,0.2)' : 'rgba(6,157,223,0.1)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <Check size={10} color={active ? 'white' : '#0066FF'} strokeWidth={3} />
+              <Check size={10} color={active ? 'white' : '#2B2E81'} strokeWidth={3} />
             </span>
             {f}
           </li>
@@ -113,14 +113,14 @@ export function PlanCard({ plan, active, loading, onSubscribe }: Props) {
           height: '44px',
           borderRadius: '12px',
           border: 'none',
-          background: active ? 'white' : '#0066FF',
+          background: active ? 'white' : '#2B2E81',
           color: active ? '#0052d4' : 'white',
           fontSize: '14px',
           fontWeight: 600,
           cursor: active || loading ? 'not-allowed' : 'pointer',
           opacity: loading ? 0.7 : 1,
           letterSpacing: '-0.01em',
-          boxShadow: active ? '0 4px 14px rgba(0,0,0,0.12)' : '0 4px 14px rgba(0,102,255,0.25)',
+          boxShadow: active ? '0 4px 14px rgba(0,0,0,0.12)' : '0 4px 14px rgba(6,157,223,0.25)',
           transition: 'all 0.2s ease',
         }}
       >
@@ -129,7 +129,7 @@ export function PlanCard({ plan, active, loading, onSubscribe }: Props) {
 
       <style jsx>{`
         .plan-card:hover {
-          border-color: rgba(0, 102, 255, 0.2) !important;
+          border-color: rgba(6, 157, 223, 0.2) !important;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
           transform: translateY(-2px);
         }

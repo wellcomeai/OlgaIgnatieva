@@ -4,9 +4,9 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "OpenSaaS — Open source SaaS boilerplate",
+  title: "VisaNews2U — Telegram-воронки",
   description:
-    "Полнофункциональный SaaS-шаблон на FastAPI + Next.js. Аутентификация, биллинг, реферальная программа, API-ключи и админка из коробки.",
+    "Личный кабинет VisaNews2U: Telegram-боты, воронки и продажа файлов с оплатой через Робокассу.",
   icons: {
     icon: "/favicon/favicon.ico",
     apple: "/favicon/apple-touch-icon.png",

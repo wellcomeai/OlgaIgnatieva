@@ -120,15 +120,15 @@ export default function RegisterPage() {
             marginTop: '16px',
             marginBottom: '4px',
             borderRadius: '10px',
-            border: '1px solid rgba(0,102,255,0.2)',
-            background: 'rgba(0,102,255,0.05)',
+            border: '1px solid rgba(6,157,223,0.2)',
+            background: 'rgba(6,157,223,0.05)',
             padding: '10px 14px',
             fontSize: '13px',
             color: '#3a3a3e',
           }}
         >
           Вас пригласили по коду{" "}
-          <span style={{ fontFamily: 'Geist Mono, monospace', fontWeight: 600, color: '#0066FF' }}>{refCode}</span>
+          <span style={{ fontFamily: 'Geist Mono, monospace', fontWeight: 600, color: '#2B2E81' }}>{refCode}</span>
         </div>
       )}
 
@@ -190,7 +190,7 @@ export default function RegisterPage() {
 
       <p className="mt-6 text-center" style={{ fontSize: '14px', color: '#8e8e93' }}>
         Уже есть аккаунт?{" "}
-        <Link href="/login" className="font-semibold text-[#0066FF] hover:underline">
+        <Link href="/login" className="font-semibold text-[#2B2E81] hover:underline">
           Войти
         </Link>
       </p>
@@ -347,8 +347,8 @@ function VerifyCodeForm({
               flex: 1,
               height: '52px',
               borderRadius: '12px',
-              border: d ? '1.5px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
-              background: d ? 'rgba(0,102,255,0.04)' : '#fafafa',
+              border: d ? '1.5px solid #2B2E81' : '1px solid rgba(0,0,0,0.1)',
+              background: d ? 'rgba(6,157,223,0.04)' : '#fafafa',
               textAlign: 'center',
               fontSize: '22px',
               fontWeight: 700,
@@ -382,7 +382,7 @@ function VerifyCodeForm({
             type="button"
             onClick={resend}
             disabled={resending}
-            className="font-semibold text-[#0066FF] hover:underline disabled:opacity-50"
+            className="font-semibold text-[#2B2E81] hover:underline disabled:opacity-50"
             style={{ background: 'none', border: 'none', cursor: 'pointer' }}
           >
             {resending ? "Отправка..." : "Отправить код повторно"}

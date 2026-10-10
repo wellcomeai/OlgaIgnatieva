@@ -26,7 +26,7 @@ function BentoCard({ icon, title, desc, decor, large }: BentoCardProps) {
       className={`bento-card ${large ? 'md:col-span-2' : ''}`}
       style={{ padding: '28px', willChange: 'transform', position: 'relative', minHeight: large ? '220px' : '180px' }}
     >
-      <div style={{ color: '#0066FF', marginBottom: '16px' }}>{icon}</div>
+      <div style={{ color: '#2B2E81', marginBottom: '16px' }}>{icon}</div>
       <div style={{ fontSize: '17px', fontWeight: 700, color: '#171717', marginBottom: '8px', letterSpacing: '-0.01em' }}>
         {title}
       </div>
@@ -55,9 +55,9 @@ const LoginDecor = () => (
     }}
   >
     <div style={{ marginBottom: '8px', color: '#8e8e93' }}>{'// JWT Auth'}</div>
-    <div><span style={{ color: '#0066FF' }}>POST</span> /auth/login</div>
-    <div><span style={{ color: '#0066FF' }}>POST</span> /auth/refresh</div>
-    <div><span style={{ color: '#0066FF' }}>POST</span> /auth/verify-email</div>
+    <div><span style={{ color: '#2B2E81' }}>POST</span> /auth/login</div>
+    <div><span style={{ color: '#2B2E81' }}>POST</span> /auth/refresh</div>
+    <div><span style={{ color: '#2B2E81' }}>POST</span> /auth/verify-email</div>
   </div>
 );
 
@@ -84,7 +84,7 @@ const ReferralDecor = () => (
         style={{
           padding: item === '→' ? '0' : '4px 12px',
           borderRadius: '20px',
-          background: item === '→' ? 'transparent' : item === '+20%' ? '#0066FF' : '#f5f5f7',
+          background: item === '→' ? 'transparent' : item === '+20%' ? '#2B2E81' : '#f5f5f7',
           color: item === '+20%' ? 'white' : item === '→' ? '#8e8e93' : '#171717',
           fontSize: '12px',
           fontWeight: 500,
@@ -131,7 +131,7 @@ export function BentoFeaturesSection() {
           <div
             style={{
               fontSize: '12px',
-              color: '#0066FF',
+              color: '#2B2E81',
               fontWeight: 600,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',

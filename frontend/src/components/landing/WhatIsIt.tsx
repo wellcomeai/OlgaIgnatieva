@@ -36,7 +36,7 @@ export function WhatIsItSection() {
             <div
               style={{
                 fontSize: '12px',
-                color: '#0066FF',
+                color: '#2B2E81',
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -70,7 +70,7 @@ export function WhatIsItSection() {
             {items.map((item, i) => (
               <div
                 key={item.title}
-                className="reveal border border-black/[0.07] rounded-2xl p-6 bg-white transition-all duration-200 hover:border-[#0066FF]/20 hover:shadow-[0_8px_32px_rgba(0,102,255,0.08)]"
+                className="reveal border border-black/[0.07] rounded-2xl p-6 bg-white transition-all duration-200 hover:border-[#2B2E81]/20 hover:shadow-[0_8px_32px_rgba(6,157,223,0.08)]"
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div style={{ fontSize: '28px', marginBottom: '12px' }}>{item.icon}</div>

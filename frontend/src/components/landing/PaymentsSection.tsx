@@ -90,8 +90,8 @@ export function PaymentsSection() {
                       className="env-line"
                       style={{
                         padding: '0 24px 0 22px',
-                        borderLeft: isHighlight ? '2px solid #0066FF' : '2px solid transparent',
-                        background: isHighlight ? 'rgba(0,102,255,0.15)' : 'transparent',
+                        borderLeft: isHighlight ? '2px solid #2B2E81' : '2px solid transparent',
+                        background: isHighlight ? 'rgba(6,157,223,0.15)' : 'transparent',
                         color: isComment ? '#6b7280' : isHighlight ? '#cfe2ff' : '#e5e5e5',
                         minHeight: '24px',
                         animationDelay: `${0.15 + i * 0.1}s`,
@@ -110,7 +110,7 @@ export function PaymentsSection() {
             <div
               style={{
                 fontSize: '12px',
-                color: '#0066FF',
+                color: '#2B2E81',
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -149,14 +149,14 @@ export function PaymentsSection() {
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
-                      background: 'rgba(0,102,255,0.1)',
+                      background: 'rgba(6,157,223,0.1)',
                       display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
                     }}
                   >
-                    <Check size={14} color="#0066FF" strokeWidth={3} />
+                    <Check size={14} color="#2B2E81" strokeWidth={3} />
                   </span>
                   {f}
                 </li>

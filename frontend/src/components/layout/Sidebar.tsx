@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { usePathname } from "next/navigation";
 import {
   CreditCard,
@@ -50,7 +50,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             className={cn(
               "flex items-center gap-3 rounded-xl py-2.5 px-3 text-sm font-medium transition-all duration-200",
               active
-                ? "bg-[rgba(0,102,255,0.08)] text-[#0066FF]"
+                ? "bg-[rgba(6,157,223,0.08)] text-[#2B2E81]"
                 : "text-[#8e8e93] hover:bg-black/[0.04] hover:text-[#171717]",
             )}
           >
@@ -80,7 +80,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
                 className={cn(
                   "flex items-center gap-3 rounded-xl py-2.5 px-3 text-sm font-medium transition-all duration-200",
                   active
-                    ? "bg-[rgba(0,102,255,0.08)] text-[#0066FF]"
+                    ? "bg-[rgba(6,157,223,0.08)] text-[#2B2E81]"
                     : "text-[#8e8e93] hover:bg-black/[0.04] hover:text-[#171717]",
                 )}
               >
@@ -102,24 +102,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         className="flex h-14 items-center gap-2 px-5"
         style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}
       >
-        <Image
-          src="/logo.png"
-          alt="logo"
-          width={26}
-          height={26}
-          style={{ borderRadius: '7px' }}
-        />
-        <span
-          style={{
-            fontFamily: 'Geist, sans-serif',
-            fontWeight: 700,
-            fontSize: '15px',
-            color: '#171717',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          OpenSaaS
-        </span>
+        <BrandLogo size={30} />
       </div>
       <NavLinks onNavigate={onNavigate} />
     </>

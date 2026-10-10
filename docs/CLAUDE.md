@@ -12,7 +12,7 @@ Markdown-документация для разработчиков, испол�
 - `adding-modules.md` — пошаговая инструкция: как добавить свой модуль
 - `deployment-render.md` — деплой на Render + Vercel
 - `deployment-docker.md` — деплой через Docker Compose на VPS
-- `PROPOSAL.md` — техническое предложение Ignis (Telegram-воронки + Робокасса)
+- `PROPOSAL.md` — техническое предложение VisaNews2U (Telegram-воронки + Робокасса)
 
 ## Соглашения
 

@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 const cards = [
   {
     Icon: Shield,
-    color: "#0066FF",
-    bg: "rgba(0,102,255,0.08)",
+    color: "#2B2E81",
+    bg: "rgba(6,157,223,0.08)",
     title: "Регистрация пользователей",
     text: "Вход, выход, восстановление пароля и подтверждение email — работает из коробки",
   },
@@ -77,7 +77,7 @@ export function WhatInside() {
           width: "420px",
           height: "420px",
           borderRadius: "50%",
-          background: "rgba(0,102,255,0.05)",
+          background: "rgba(6,157,223,0.05)",
           filter: "blur(65px)",
           pointerEvents: "none",
           zIndex: 0,
@@ -88,7 +88,7 @@ export function WhatInside() {
           <div
             style={{
               fontSize: "12px",
-              color: "#0066FF",
+              color: "#2B2E81",
               fontWeight: 600,
               letterSpacing: "0.1em",
               textTransform: "uppercase",

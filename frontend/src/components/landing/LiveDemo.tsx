@@ -7,8 +7,8 @@ import { UserPlus, LayoutDashboard, Sparkles } from "lucide-react";
 const cards = [
   {
     Icon: UserPlus,
-    color: "#0066FF",
-    bg: "rgba(0,102,255,0.08)",
+    color: "#2B2E81",
+    bg: "rgba(6,157,223,0.08)",
     title: "Зарегистрируйся",
     text: "Та же форма что получишь ты",
   },
@@ -51,7 +51,7 @@ export function LiveDemo() {
         position: "relative",
         overflow: "hidden",
         background:
-          "radial-gradient(ellipse 70% 50% at 15% 50%, rgba(0,102,255,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 85% 30%, rgba(139,92,246,0.05) 0%, transparent 60%), #ffffff",
+          "radial-gradient(ellipse 70% 50% at 15% 50%, rgba(6,157,223,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 85% 30%, rgba(139,92,246,0.05) 0%, transparent 60%), #ffffff",
         padding: "120px 0",
       }}
     >
@@ -68,7 +68,7 @@ export function LiveDemo() {
           <div
             style={{
               fontSize: "12px",
-              color: "#0066FF",
+              color: "#2B2E81",
               fontWeight: 600,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -172,8 +172,8 @@ export function LiveDemo() {
         }
         :global(.live-demo-cta:hover) {
           transform: translateY(-1px);
-          border-color: #0066ff;
-          box-shadow: 0 8px 24px rgba(0, 102, 255, 0.18),
+          border-color: #2B2E81;
+          box-shadow: 0 8px 24px rgba(6, 157, 223, 0.18),
             0 2px 6px rgba(0, 0, 0, 0.06);
         }
       `}</style>

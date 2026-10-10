@@ -6,8 +6,8 @@ import { Repeat, ShoppingBag, Wrench, GraduationCap } from "lucide-react";
 const cards = [
   {
     Icon: Repeat,
-    color: "#0066FF",
-    bg: "rgba(0,102,255,0.08)",
+    color: "#2B2E81",
+    bg: "rgba(6,157,223,0.08)",
     title: "Сервис подписок",
     text: "Продавай доступ к контенту или инструменту по подписке",
   },
@@ -71,7 +71,7 @@ export function WhatCanCreate() {
           width: '500px',
           height: '500px',
           borderRadius: '50%',
-          background: 'rgba(0,102,255,0.06)',
+          background: 'rgba(6,157,223,0.06)',
           filter: 'blur(90px)',
           pointerEvents: 'none',
           zIndex: 0,
@@ -82,7 +82,7 @@ export function WhatCanCreate() {
           <div
             style={{
               fontSize: "12px",
-              color: "#0066FF",
+              color: "#2B2E81",
               fontWeight: 600,
               letterSpacing: "0.1em",
               textTransform: "uppercase",

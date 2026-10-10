@@ -31,7 +31,7 @@ export function AuthSection() {
             <div
               style={{
                 fontSize: '12px',
-                color: '#0066FF',
+                color: '#2B2E81',
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -70,14 +70,14 @@ export function AuthSection() {
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
-                      background: 'rgba(0,102,255,0.1)',
+                      background: 'rgba(6,157,223,0.1)',
                       display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
                     }}
                   >
-                    <Check size={14} color="#0066FF" strokeWidth={3} />
+                    <Check size={14} color="#2B2E81" strokeWidth={3} />
                   </span>
                   {f}
                 </li>
@@ -175,7 +175,7 @@ export function AuthSection() {
               className="auth-anim-item auth-delay-3"
               style={{
                 width: '100%',
-                background: '#0066FF',
+                background: '#2B2E81',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
@@ -183,7 +183,7 @@ export function AuthSection() {
                 fontSize: '15px',
                 fontWeight: 600,
                 cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(0, 102, 255, 0.3)',
+                boxShadow: '0 4px 14px rgba(6, 157, 223, 0.3)',
                 marginBottom: '14px',
               }}
             >
@@ -197,7 +197,7 @@ export function AuthSection() {
                 fontSize: '13px',
               }}
             >
-              <span style={{ color: '#0066FF', cursor: 'pointer' }}>Забыли пароль?</span>
+              <span style={{ color: '#2B2E81', cursor: 'pointer' }}>Забыли пароль?</span>
             </div>
           </div>
         </div>

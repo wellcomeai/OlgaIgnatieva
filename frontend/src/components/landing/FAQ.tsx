@@ -93,7 +93,7 @@ export function FAQ() {
                 key={f.q}
                 style={{
                   background: isOpen ? '#fafafa' : 'white',
-                  border: isOpen ? '1px solid rgba(0,102,255,0.15)' : '1px solid rgba(0,0,0,0.07)',
+                  border: isOpen ? '1px solid rgba(6,157,223,0.15)' : '1px solid rgba(0,0,0,0.07)',
                   borderRadius: '16px',
                   overflow: 'hidden',
                   transition: 'border-color 0.2s ease, background 0.2s ease',
@@ -131,7 +131,7 @@ export function FAQ() {
                       width: '28px',
                       height: '28px',
                       borderRadius: '50%',
-                      background: isOpen ? '#0066FF' : 'rgba(0,0,0,0.06)',
+                      background: isOpen ? '#2B2E81' : 'rgba(0,0,0,0.06)',
                       display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',

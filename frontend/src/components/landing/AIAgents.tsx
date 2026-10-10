@@ -24,7 +24,7 @@ export function AIAgentsSection() {
             <div
               style={{
                 fontSize: '12px',
-                color: '#0066FF',
+                color: '#2B2E81',
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',

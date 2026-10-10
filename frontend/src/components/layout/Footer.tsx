@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 const columns = [
   {
@@ -47,17 +47,7 @@ export function Footer() {
               className="flex items-center gap-1.5 mb-3"
               style={{ textDecoration: 'none' }}
             >
-              <Image src="/logo.png" alt="logo" width={28} height={28} style={{ borderRadius: '6px' }} />
-              <span
-                style={{
-                  fontWeight: 600,
-                  fontSize: '17px',
-                  color: 'white',
-                  letterSpacing: '-0.01em',
-                }}
-              >
-                OpenSaaS
-              </span>
+              <BrandLogo size={30} tone="dark" />
             </Link>
             <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.65)', lineHeight: '1.6' }}>
               Готовая платформа для запуска онлайн-сервиса. Шаблон + 5 видеоуроков.
@@ -107,7 +97,7 @@ export function Footer() {
           }}
         >
           <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.55)' }}>
-            © {new Date().getFullYear()} OpenSaaS. Все права защищены.
+            © {new Date().getFullYear()} VisaNews2U. Все права защищены.
           </span>
         </div>
       </div>

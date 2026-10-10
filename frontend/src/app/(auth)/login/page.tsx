@@ -83,7 +83,7 @@ export default function LoginPage() {
             <Label htmlFor="password" style={{ fontSize: '13px', fontWeight: 500 }}>Пароль</Label>
             <Link
               href="/forgot-password"
-              className="text-xs text-[#0066FF] hover:underline"
+              className="text-xs text-[#2B2E81] hover:underline"
               style={{ textDecoration: 'none' }}
             >
               Забыли пароль?
@@ -115,7 +115,7 @@ export default function LoginPage() {
 
       <p className="mt-6 text-center" style={{ fontSize: '14px', color: '#8e8e93' }}>
         Нет аккаунта?{" "}
-        <Link href="/register" className="font-semibold text-[#0066FF] hover:underline">
+        <Link href="/register" className="font-semibold text-[#2B2E81] hover:underline">
           Зарегистрируйтесь
         </Link>
       </p>

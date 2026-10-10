@@ -33,7 +33,7 @@ export function ManifestoSection() {
           height: '720px',
           marginLeft: '-360px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,102,255,0.18) 0%, rgba(99,102,241,0.08) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(6,157,223,0.18) 0%, rgba(99,102,241,0.08) 40%, transparent 70%)',
           filter: 'blur(80px)',
           pointerEvents: 'none',
           y: orbY,
@@ -55,7 +55,7 @@ export function ManifestoSection() {
         <div
           style={{
             fontSize: '12px',
-            color: '#0066FF',
+            color: '#2B2E81',
             fontWeight: 600,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',

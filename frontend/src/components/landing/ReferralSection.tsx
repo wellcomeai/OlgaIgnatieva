@@ -33,7 +33,7 @@ export function ReferralSection() {
         <div
           style={{
             fontSize: '12px',
-            color: '#0066FF',
+            color: '#2B2E81',
             fontWeight: 600,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
@@ -106,14 +106,14 @@ export function ReferralSection() {
                   width: '22px',
                   height: '22px',
                   borderRadius: '50%',
-                  background: 'rgba(0,102,255,0.1)',
+                  background: 'rgba(6,157,223,0.1)',
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
                 }}
               >
-                <Check size={12} color="#0066FF" strokeWidth={3} />
+                <Check size={12} color="#2B2E81" strokeWidth={3} />
               </span>
               {f}
             </li>
@@ -123,7 +123,7 @@ export function ReferralSection() {
         {/* Referral link mockup */}
         <div
           style={{
-            border: '1.5px solid rgba(0,102,255,0.2)',
+            border: '1.5px solid rgba(6,157,223,0.2)',
             borderRadius: '12px',
             background: '#EBF3FF',
             padding: '16px 20px',
@@ -140,7 +140,7 @@ export function ReferralSection() {
             style={{
               fontFamily: 'Geist Mono, monospace',
               fontSize: '14px',
-              color: '#0066FF',
+              color: '#2B2E81',
               letterSpacing: '0.02em',
             }}
           >
@@ -152,7 +152,7 @@ export function ReferralSection() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              background: copied ? '#0066FF' : 'white',
+              background: copied ? '#2B2E81' : 'white',
               color: copied ? 'white' : '#171717',
               border: '1px solid rgba(0,0,0,0.1)',
               borderRadius: '8px',
@@ -208,13 +208,13 @@ function FlowBlock({
     <div
       className="ref-block"
       style={{
-        background: accent ? '#0066FF' : 'white',
+        background: accent ? '#2B2E81' : 'white',
         color: accent ? 'white' : '#171717',
         border: accent ? 'none' : '1px solid rgba(0,0,0,0.08)',
         borderRadius: '16px',
         padding: '20px 24px',
         minWidth: '120px',
-        boxShadow: accent ? '0 10px 30px rgba(0,102,255,0.3)' : '0 4px 14px rgba(0,0,0,0.04)',
+        boxShadow: accent ? '0 10px 30px rgba(6,157,223,0.3)' : '0 4px 14px rgba(0,0,0,0.04)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -223,7 +223,7 @@ function FlowBlock({
       }}
     >
       {icon && (
-        <span style={{ color: accent ? 'white' : '#0066FF', display: 'inline-flex' }}>{icon}</span>
+        <span style={{ color: accent ? 'white' : '#2B2E81', display: 'inline-flex' }}>{icon}</span>
       )}
       <span
         style={{
@@ -255,7 +255,7 @@ function FlowArrow({ delay }: { delay: number }) {
         style={{
           width: '100%',
           height: '2px',
-          background: 'linear-gradient(90deg, rgba(0,102,255,0.4), rgba(0,102,255,0.8))',
+          background: 'linear-gradient(90deg, rgba(6,157,223,0.4), rgba(6,157,223,0.8))',
           animationDelay: `${delay}s`,
         }}
       />

@@ -58,7 +58,7 @@ export function HowToStartSection() {
           <div
             style={{
               fontSize: '12px',
-              color: '#0066FF',
+              color: '#2B2E81',
               fontWeight: 600,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -141,8 +141,8 @@ export function HowToStartSection() {
         }
         .hts-card:hover {
           transform: translateY(-4px);
-          border-color: rgba(0, 102, 255, 0.25);
-          box-shadow: 0 8px 32px rgba(0, 102, 255, 0.1);
+          border-color: rgba(6, 157, 223, 0.25);
+          box-shadow: 0 8px 32px rgba(6, 157, 223, 0.1);
         }
 
         .hts-num {
@@ -181,7 +181,7 @@ export function HowToStartSection() {
             left: 12%;
             right: 12%;
             height: 2px;
-            background: rgba(0, 102, 255, 0.12);
+            background: rgba(6, 157, 223, 0.12);
             border-radius: 2px;
             overflow: hidden;
             z-index: 0;
@@ -189,7 +189,7 @@ export function HowToStartSection() {
           .hts-line-fill {
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, #0066FF, #6366f1);
+            background: linear-gradient(90deg, #2B2E81, #6366f1);
             transform: scaleX(0);
             transform-origin: left center;
           }
@@ -209,8 +209,8 @@ export function HowToStartSection() {
             height: 14px;
             border-radius: 50%;
             background: white;
-            border: 3px solid #0066FF;
-            box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
+            border: 3px solid #2B2E81;
+            box-shadow: 0 0 0 4px rgba(6, 157, 223, 0.1);
             z-index: 2;
           }
           .hts-card {

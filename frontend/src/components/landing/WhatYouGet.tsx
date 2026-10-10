@@ -41,7 +41,7 @@ export function WhatYouGet() {
           width: "400px",
           height: "400px",
           borderRadius: "50%",
-          background: "rgba(0,102,255,0.05)",
+          background: "rgba(6,157,223,0.05)",
           filter: "blur(60px)",
           pointerEvents: "none",
           zIndex: 0,
@@ -68,7 +68,7 @@ export function WhatYouGet() {
           <div
             style={{
               fontSize: "12px",
-              color: "#0066FF",
+              color: "#2B2E81",
               fontWeight: 600,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -109,14 +109,14 @@ export function WhatYouGet() {
                 width: "52px",
                 height: "52px",
                 borderRadius: "14px",
-                background: "rgba(0,102,255,0.08)",
+                background: "rgba(6,157,223,0.08)",
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
                 marginBottom: "20px",
               }}
             >
-              <Box size={24} color="#0066FF" strokeWidth={1.75} />
+              <Box size={24} color="#2B2E81" strokeWidth={1.75} />
             </div>
             <h3
               style={{
@@ -151,7 +151,7 @@ export function WhatYouGet() {
                     gap: "10px",
                   }}
                 >
-                  <span style={{ color: "#0066FF", fontWeight: 700 }}>✓</span>
+                  <span style={{ color: "#2B2E81", fontWeight: 700 }}>✓</span>
                   <span>{item}</span>
                 </li>
               ))}

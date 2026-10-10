@@ -84,7 +84,7 @@ export function Pricing() {
           width: '450px',
           height: '450px',
           borderRadius: '50%',
-          background: 'rgba(0,102,255,0.07)',
+          background: 'rgba(6,157,223,0.07)',
           filter: 'blur(70px)',
           pointerEvents: 'none',
           zIndex: 0,
@@ -111,7 +111,7 @@ export function Pricing() {
           <div
             style={{
               fontSize: '12px',
-              color: '#0066FF',
+              color: '#2B2E81',
               fontWeight: 600,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -171,7 +171,7 @@ export function Pricing() {
                   padding: '32px',
                   border: plan.highlight ? 'none' : '1px solid rgba(0,0,0,0.07)',
                   boxShadow: plan.highlight
-                    ? '0 20px 60px rgba(0,102,255,0.25), 0 0 0 1px rgba(255,255,255,0.1) inset'
+                    ? '0 20px 60px rgba(6,157,223,0.25), 0 0 0 1px rgba(255,255,255,0.1) inset'
                     : '0 2px 20px rgba(0,0,0,0.04)',
                   transform: plan.highlight ? 'translateY(-8px)' : 'none',
                   transition: 'all 0.3s ease',
@@ -186,7 +186,7 @@ export function Pricing() {
                       left: '50%',
                       transform: 'translateX(-50%)',
                       background: 'white',
-                      color: '#0066FF',
+                      color: '#2B2E81',
                       fontSize: '11px',
                       fontWeight: 700,
                       letterSpacing: '0.06em',
@@ -285,14 +285,14 @@ export function Pricing() {
                           width: '18px',
                           height: '18px',
                           borderRadius: '50%',
-                          background: plan.highlight ? 'rgba(255,255,255,0.2)' : 'rgba(0,102,255,0.1)',
+                          background: plan.highlight ? 'rgba(255,255,255,0.2)' : 'rgba(6,157,223,0.1)',
                           display: 'inline-flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           flexShrink: 0,
                         }}
                       >
-                        <Check size={10} color={plan.highlight ? 'white' : '#0066FF'} strokeWidth={3} />
+                        <Check size={10} color={plan.highlight ? 'white' : '#2B2E81'} strokeWidth={3} />
                       </span>
                       {f}
                     </li>

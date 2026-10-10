@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 export default function AuthLayout({
   children,
@@ -15,24 +15,7 @@ export default function AuthLayout({
           className="inline-flex items-center gap-2"
           style={{ textDecoration: 'none' }}
         >
-          <Image
-            src="/logo.png"
-            alt="OpenSaaS"
-            width={26}
-            height={26}
-            style={{ borderRadius: '7px' }}
-          />
-          <span
-            style={{
-              fontWeight: 700,
-              fontSize: '15px',
-              color: '#171717',
-              letterSpacing: '-0.02em',
-              fontFamily: 'Geist, sans-serif',
-            }}
-          >
-            OpenSaaS
-          </span>
+          <BrandLogo size={30} />
         </Link>
       </header>
 

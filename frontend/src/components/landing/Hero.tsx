@@ -14,7 +14,7 @@ const itemVariants = {
 };
 
 const stats = [
-  { label: 'Пользователи', value: '2,847', change: '+12%', color: '#0066FF', barColor: 'rgba(0,102,255,0.12)' },
+  { label: 'Пользователи', value: '2,847', change: '+12%', color: '#2B2E81', barColor: 'rgba(6,157,223,0.12)' },
   { label: 'Выручка',      value: '₽48K',   change: '+8%',  color: '#10b981', barColor: 'rgba(16,185,129,0.12)' },
   { label: 'Активных',    value: '1,203',   change: '+5%',  color: '#f59e0b', barColor: 'rgba(245,158,11,0.12)' },
   { label: 'API запросов', value: '89.2K',  change: '+23%', color: '#8b5cf6', barColor: 'rgba(139,92,246,0.12)' },
@@ -37,7 +37,7 @@ export function Hero() {
           width: '520px',
           height: '520px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,102,255,0.38) 0%, rgba(0,102,255,0.12) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(6,157,223,0.38) 0%, rgba(6,157,223,0.12) 40%, transparent 70%)',
           filter: 'blur(50px)',
           top: '-140px',
           left: '6%',
@@ -256,7 +256,7 @@ export function Hero() {
                 }}
               >
                 {[
-                  { bg: '#0066FF', active: true },
+                  { bg: '#2B2E81', active: true },
                   { bg: '#e5e7eb', active: false },
                   { bg: '#e5e7eb', active: false },
                   { bg: '#e5e7eb', active: false },
@@ -328,8 +328,8 @@ export function Hero() {
                           flex: 1,
                           height: `${h}%`,
                           background: i === 11
-                            ? 'linear-gradient(180deg, #0066FF, #6366f1)'
-                            : `rgba(0,102,255,${0.08 + (h / 100) * 0.18})`,
+                            ? 'linear-gradient(180deg, #2B2E81, #6366f1)'
+                            : `rgba(6,157,223,${0.08 + (h / 100) * 0.18})`,
                           borderRadius: '3px 3px 0 0',
                         }}
                       />
