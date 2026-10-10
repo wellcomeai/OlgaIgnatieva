@@ -71,6 +71,16 @@ class Settings(BaseSettings):
     environment: str = Field(default="development")
     cors_origins: str = Field(default="http://localhost:3000")
 
+    # === Telegram ===
+    # Публичный HTTPS-адрес, на который Telegram шлёт апдейты ботов.
+    # Пусто → используется APP_URL (API доступен на том же домене через /api/).
+    telegram_webhook_base_url: str = Field(default="")
+    # Ключ Fernet для шифрования токенов ботов в БД
+    # (python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())").
+    # Пусто → выводится из SECRET_KEY: смена SECRET_KEY тогда сделает
+    # сохранённые токены нечитаемыми.
+    bot_token_encryption_key: str = Field(default="")
+
     # === Бизнес-логика ===
     trial_days: int = Field(default=3)
     referral_commission_percent: int = Field(default=20)
@@ -113,6 +123,10 @@ class Settings(BaseSettings):
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def telegram_webhook_base(self) -> str:
+        return (self.telegram_webhook_base_url or self.app_url).rstrip("/")
 
     @property
     def redis_enabled(self) -> bool:

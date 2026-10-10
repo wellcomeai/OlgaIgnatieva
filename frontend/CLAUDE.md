@@ -19,8 +19,8 @@ src/app/
 ├── layout.tsx              # глобальный layout (Providers)
 ├── globals.css             # Tailwind + CSS-переменные темы
 │
-├── (public)/               # лендинг и публичные страницы
-│   ├── page.tsx            # /
+├── (public)/               # публичные страницы
+│   ├── page.tsx            # / → редирект в /dashboard (платформа личная)
 │   ├── pricing/page.tsx    # /pricing
 │   └── ref/[code]/page.tsx # /ref/CODE
 │
@@ -34,7 +34,9 @@ src/app/
 │
 ├── (dashboard)/            # защищённые страницы (AuthGuard + Sidebar)
 │   ├── layout.tsx
-│   ├── dashboard/page.tsx
+│   ├── dashboard/page.tsx  # сводка по ботам
+│   ├── bots/page.tsx       # список ботов + подключение по токену
+│   ├── bots/[id]/page.tsx  # бот: приветствие с превью, метки, подписчики, настройки
 │   ├── billing/page.tsx
 │   ├── referrals/page.tsx
 │   ├── api-keys/page.tsx

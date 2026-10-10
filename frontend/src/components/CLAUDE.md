@@ -7,6 +7,10 @@
 - `layout/` — Sidebar, Header, Footer, PublicHeader.
 - `landing/` — секции лендинга (Hero, Features, Pricing, Testimonials,
   FAQ, CTA).
+- `bots/` — раздел Telegram-ботов: ConnectBotDialog, WelcomeEditor +
+  TelegramPreview (живое превью чата), SourceLinks, SubscribersTable,
+  BotSettings, BotAvatar, WebhookStatusBadge.
+- `brand/` — BrandLogo (логотип VisaNews2U).
 - `billing/` — TrialBanner, PlanCard, PaymentHistory.
 - `referrals/` — ReferralWidget, PayoutHistory.
 - `AuthGuard.tsx` — обёртка для защищённых страниц (требует логин,

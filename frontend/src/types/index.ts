@@ -120,3 +120,63 @@ export interface ReferralUser {
   status: "registered" | "trial" | "converted";
   created_at: string;
 }
+
+// ---- Telegram-боты ----
+
+export type WebhookStatus = "pending" | "ok" | "error" | "no_https" | "disabled";
+
+export interface WelcomeButton {
+  text: string;
+  url: string;
+}
+
+export interface Bot {
+  id: UUID;
+  tg_bot_id: number;
+  username: string;
+  first_name: string;
+  is_active: boolean;
+  webhook_status: WebhookStatus;
+  webhook_error: string | null;
+  welcome_text: string;
+  welcome_buttons: WelcomeButton[];
+  last_update_at: string | null;
+  created_at: string;
+  subscribers_count: number;
+}
+
+export interface BotUpdate {
+  welcome_text?: string;
+  welcome_buttons?: WelcomeButton[];
+  is_active?: boolean;
+}
+
+export interface BotWebhookInfo {
+  url_set: boolean;
+  pending_update_count: number;
+  last_error_message: string | null;
+  last_error_date: string | null;
+}
+
+export interface BotSubscriber {
+  id: UUID;
+  tg_user_id: number;
+  username: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  language_code: string | null;
+  source: string | null;
+  is_blocked: boolean;
+  created_at: string;
+  last_seen_at: string;
+}
+
+export interface BotSubscriberPage {
+  items: BotSubscriber[];
+  total: number;
+}
+
+export interface BotSourceStat {
+  source: string | null;
+  count: number;
+}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import { usePathname } from "next/navigation";
 import {
-  CreditCard,
+  Bot,
   Gift,
   LayoutDashboard,
   Settings,
@@ -19,8 +19,7 @@ import { cn } from "@/lib/utils";
 
 const userNav = [
   { href: "/dashboard", label: "Главная", icon: LayoutDashboard },
-  { href: "/billing", label: "Подписка", icon: CreditCard },
-  { href: "/referrals", label: "Рефералы", icon: Gift },
+  { href: "/bots", label: "Боты", icon: Bot },
   { href: "/settings", label: "Настройки", icon: Settings },
 ];
 
