@@ -13,6 +13,7 @@ from modules.billing import service as billing_service
 from modules.billing.models import Payment, PaymentStatus
 from modules.email import service as email_service
 from modules.referrals import service as ref_service
+from modules.app_settings.service import robokassa_config
 from modules.billing.robokassa import verify_result_signature
 from modules.shop import delivery as shop_delivery
 
@@ -41,7 +42,8 @@ async def robokassa_webhook(
     shp = {k: str(v) for k, v in form.items() if k.startswith("Shp_")}
     if not (OutSum and InvId and SignatureValue):
         raise HTTPException(status_code=400, detail="Missing fields")
-    if not verify_result_signature(OutSum, InvId, SignatureValue, shp):
+    cfg = await robokassa_config(db)
+    if not verify_result_signature(cfg, OutSum, InvId, SignatureValue, shp):
         raise HTTPException(status_code=400, detail="Invalid signature")
 
     if shp.get("Shp_kind") == "order":

@@ -19,3 +19,4 @@ from modules.referrals.models import (  # noqa: F401
 from modules.api_keys.models import ApiKey, RateLimitEntry  # noqa: F401
 from modules.bots.models import Bot, Subscriber  # noqa: F401
 from modules.shop.models import Order, Product, ProductFile  # noqa: F401
+from modules.app_settings.models import AppSetting  # noqa: F401

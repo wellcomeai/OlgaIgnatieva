@@ -11,8 +11,8 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import settings
+from modules.app_settings.service import robokassa_config
 from modules.auth.models import User
-from modules.billing import robokassa
 from modules.bots.models import Bot, Subscriber
 from modules.shop import storage
 from modules.shop.models import Order, OrderStatus, Product, ProductFile
@@ -225,13 +225,14 @@ async def get_order(db: AsyncSession, user: User, order_id: uuid.UUID) -> Order:
     return order
 
 
-def payments_config() -> PaymentsConfig:
+async def payments_config(db: AsyncSession) -> PaymentsConfig:
     base = settings.public_base_url
     app = settings.app_url.rstrip("/")
+    cfg = await robokassa_config(db)
     return PaymentsConfig(
-        robokassa_configured=robokassa.is_configured(),
-        test_mode=settings.robokassa_test_mode,
-        receipt_enabled=settings.robokassa_receipt_enabled,
+        robokassa_configured=cfg.configured,
+        test_mode=cfg.test_mode,
+        receipt_enabled=cfg.receipt_enabled,
         result_url=f"{base}/api/v1/webhooks/robokassa",
         success_url=f"{app}/pay/success",
         fail_url=f"{app}/pay/fail",

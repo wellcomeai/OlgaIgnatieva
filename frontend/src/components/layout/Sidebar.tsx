@@ -7,12 +7,9 @@ import {
   Bot,
   Package,
   Receipt,
-  Gift,
   LayoutDashboard,
   Settings,
-  ShieldCheck,
   Users,
-  DollarSign,
 } from "lucide-react";
 
 import { useAuthStore } from "@/store/authStore";
@@ -28,10 +25,7 @@ const userNav = [
 ];
 
 const adminNav = [
-  { href: "/admin", label: "Админ", icon: ShieldCheck },
   { href: "/admin/users", label: "Пользователи", icon: Users },
-  { href: "/admin/billing", label: "Платежи", icon: DollarSign },
-  { href: "/admin/referrals", label: "Выплаты", icon: Gift },
 ];
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {

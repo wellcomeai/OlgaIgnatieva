@@ -12,7 +12,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import settings
+from modules.app_settings.service import RobokassaConfig, robokassa_config
 from modules.billing import robokassa
 from modules.bots.messaging import send_text
 from modules.bots.models import Bot, Subscriber
@@ -50,13 +50,14 @@ async def product_from_payload(db: AsyncSession, bot_row: Bot, payload: str) -> 
     return await product_for_bot(db, bot_row, product_id)
 
 
-def payment_url(order: Order, bot_row: Bot) -> str:
+def payment_url(cfg: RobokassaConfig, order: Order, bot_row: Bot) -> str:
     receipt = (
-        robokassa.build_receipt(order.product_title, order.amount)
-        if settings.robokassa_receipt_enabled
+        robokassa.build_receipt(cfg, order.product_title, order.amount)
+        if cfg.receipt_enabled
         else None
     )
     return robokassa.build_payment_url(
+        cfg,
         inv_id=order.inv_id,
         amount=order.amount,
         description=order.product_title,
@@ -119,7 +120,8 @@ async def send_offer(
         await send_product(tg, db, bot_row, subscriber, product, with_message=False)
         return
 
-    if not robokassa.is_configured():
+    cfg = await robokassa_config(db)
+    if not cfg.configured:
         logger.warning("Robokassa is not configured: offer for %s skipped", product.id)
         await send_text(tg, chat_id, "Оплата временно недоступна. Попробуйте, пожалуйста, позже.")
         return
@@ -134,7 +136,7 @@ async def send_offer(
     parts.append(f"Стоимость: <b>{price} ₽</b>")
     markup = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=f"💳 Оплатить {price} ₽", url=payment_url(order, bot_row))]
+            [InlineKeyboardButton(text=f"💳 Оплатить {price} ₽", url=payment_url(cfg, order, bot_row))]
         ]
     )
     await send_text(tg, chat_id, "\n\n".join(parts), reply_markup=markup)

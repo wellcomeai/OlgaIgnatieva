@@ -128,5 +128,5 @@ async def redeliver_order(order_id: UUID, user: CurrentUser, db: Db, bg: Backgro
 
 
 @router.get("/payments/config", response_model=PaymentsConfig)
-async def payments_config(user: CurrentUser):
-    return service.payments_config()
+async def payments_config(user: CurrentUser, db: Db):
+    return await service.payments_config(db)

@@ -29,3 +29,8 @@ def encrypt_token(token: str) -> str:
 
 def decrypt_token(value: str) -> str:
     return _fernet().decrypt(value.encode()).decode()
+
+
+# Тот же ключ используется для прочих секретов платформы (настройки интеграций)
+encrypt_secret = encrypt_token
+decrypt_secret = decrypt_token

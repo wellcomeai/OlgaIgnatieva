@@ -17,7 +17,7 @@ from decimal import Decimal
 from typing import Any
 from urllib.parse import quote, urlencode
 
-from config import settings
+from modules.app_settings.service import RobokassaConfig
 
 
 _BASE_URL = "https://auth.robokassa.ru/Merchant/Index.aspx"
@@ -31,15 +31,7 @@ def _shp_part(shp: dict[str, str] | None) -> list[str]:
     return [f"{k}={v}" for k, v in sorted((shp or {}).items())]
 
 
-def is_configured() -> bool:
-    return bool(
-        settings.robokassa_merchant_login
-        and settings.robokassa_password1
-        and settings.robokassa_password2
-    )
-
-
-def build_receipt(name: str, amount: Decimal) -> str:
+def build_receipt(cfg: RobokassaConfig, name: str, amount: Decimal) -> str:
     """Чек 54-ФЗ из одной позиции, URL-кодированный JSON (в таком виде он входит в подпись)."""
     receipt: dict[str, Any] = {
         "items": [
@@ -48,17 +40,18 @@ def build_receipt(name: str, amount: Decimal) -> str:
                 "quantity": 1,
                 "sum": float(amount),
                 "payment_method": "full_payment",
-                "payment_object": settings.robokassa_payment_object,
-                "tax": settings.robokassa_tax,
+                "payment_object": cfg.payment_object,
+                "tax": cfg.tax,
             }
         ]
     }
-    if settings.robokassa_sno:
-        receipt["sno"] = settings.robokassa_sno
+    if cfg.sno:
+        receipt["sno"] = cfg.sno
     return quote(json.dumps(receipt, ensure_ascii=False, separators=(",", ":")))
 
 
 def build_payment_url(
+    cfg: RobokassaConfig,
     inv_id: int | str,
     amount: Decimal,
     description: str,
@@ -68,14 +61,14 @@ def build_payment_url(
 ) -> str:
     """Сформировать URL для редиректа клиента на оплату."""
     out_sum = f"{amount:.2f}"
-    sig_parts = [settings.robokassa_merchant_login, out_sum, str(inv_id)]
+    sig_parts = [cfg.merchant_login, out_sum, str(inv_id)]
     if receipt:
         sig_parts.append(receipt)
-    sig_parts.append(settings.robokassa_password1)
+    sig_parts.append(cfg.password1)
     signature = _md5(":".join(sig_parts + _shp_part(shp)))
 
     params: dict[str, Any] = {
-        "MerchantLogin": settings.robokassa_merchant_login,
+        "MerchantLogin": cfg.merchant_login,
         "OutSum": out_sum,
         "InvId": inv_id,
         "Description": description[:100],
@@ -86,7 +79,7 @@ def build_payment_url(
         params["Receipt"] = receipt
     if user_email:
         params["Email"] = user_email
-    if settings.robokassa_test_mode:
+    if cfg.test_mode:
         params["IsTest"] = "1"
     params.update(shp or {})
 
@@ -94,11 +87,17 @@ def build_payment_url(
 
 
 def verify_result_signature(
-    out_sum: str, inv_id: str, signature: str, shp: dict[str, str] | None = None
+    cfg: RobokassaConfig,
+    out_sum: str,
+    inv_id: str,
+    signature: str,
+    shp: dict[str, str] | None = None,
 ) -> bool:
     """Проверка подписи в Result URL (webhook).
 
     Использует password2 — это критично.
     """
-    expected = _md5(":".join([out_sum, inv_id, settings.robokassa_password2] + _shp_part(shp)))
+    if not cfg.password2:
+        return False
+    expected = _md5(":".join([out_sum, inv_id, cfg.password2] + _shp_part(shp)))
     return expected.lower() == signature.lower()

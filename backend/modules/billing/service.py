@@ -67,7 +67,10 @@ async def create_payment_for_plan(
     await db.flush()
 
     if provider_enum == PaymentProvider.ROBOKASSA:
+        from modules.app_settings.service import robokassa_config
+
         url = robokassa.build_payment_url(
+            await robokassa_config(db),
             inv_id=numeric_inv_id,
             amount=plan.price,
             description=f"{settings.app_name} — {plan.name}",
