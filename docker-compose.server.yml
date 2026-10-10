@@ -1,0 +1,57 @@
+# Продакшен на одном VPS: PostgreSQL + приложение (nginx, FastAPI, Next.js)
+# + Caddy (HTTPS от Let's Encrypt). Секреты — в .env (см. deploy/README.md).
+#
+#   docker compose -f docker-compose.server.yml up -d --build
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-visanews2u}
+      POSTGRES_USER: ${POSTGRES_USER:-visanews2u}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-visanews2u} -d ${POSTGRES_DB:-visanews2u}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-visanews2u}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-visanews2u}
+      DATABASE_SSL: "false"
+      MEDIA_ROOT: /data/media
+    volumes:
+      - media_data:/data/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.8-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?DOMAIN is required}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  media_data:
+  caddy_data:
+  caddy_config:

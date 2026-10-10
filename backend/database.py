@@ -37,9 +37,9 @@ engine = create_async_engine(
     settings.database_url,
     echo=(settings.environment == "development"),
     pool_pre_ping=True,
-    connect_args={
-        "ssl": ssl_ctx,
-    },
+    # ssl=False явно: без параметра asyncpg пробует sslmode=prefer и читает
+    # клиентский сертификат из ~/.postgresql (PermissionError под пользователем app)
+    connect_args={"ssl": ssl_ctx if settings.database_ssl else False},
 )
 
 

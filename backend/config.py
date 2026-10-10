@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     database_url: str = Field(
         default="postgresql+asyncpg://opensaas:password@localhost:5432/opensaas_db"
     )
+    # SSL к БД: нужен managed PostgreSQL; для postgres в соседнем
+    # Docker-контейнере (без SSL) — DATABASE_SSL=false
+    database_ssl: bool = Field(default=True)
 
     # === Redis (опционально) ===
     redis_url: str = Field(default="")

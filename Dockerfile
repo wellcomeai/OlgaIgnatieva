@@ -37,7 +37,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     NEXT_TELEMETRY_DISABLED=1 \
-    MEDIA_ROOT=/data/media
+    MEDIA_ROOT=/data/media \
+    WEB_CONCURRENCY=2
 
 # ---------------------------------------------------------
 # System packages
