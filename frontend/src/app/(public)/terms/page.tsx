@@ -23,7 +23,7 @@ export default function TermsPage() {
           </p>
           <p>
             1.2. Покупка материалов регулируется{" "}
-            <Link href="/offer" className="text-[#C2334A] underline">Публичной офертой</Link>.
+            <Link href="/offer" className="text-[#2B2E81] underline">Публичной офертой</Link>.
           </p>
 
           <h2>2. Пользование ботом</h2>
@@ -66,7 +66,7 @@ export default function TermsPage() {
           <h2>6. Персональные данные</h2>
           <p>
             Обработка персональных данных осуществляется в соответствии с{" "}
-            <Link href="/privacy" className="text-[#C2334A] underline">Политикой конфиденциальности</Link>.
+            <Link href="/privacy" className="text-[#2B2E81] underline">Политикой конфиденциальности</Link>.
           </p>
 
           <h2>7. Изменения и контакты</h2>

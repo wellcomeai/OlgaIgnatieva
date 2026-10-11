@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { BrandLogo } from "@/components/brand/BrandLogo";
+import { cn } from "@/lib/utils";
+import { C } from "./theme";
 import { SELLER_STATUS, useSite } from "./useSite";
 
 export const CONTACTS = {
@@ -13,16 +16,30 @@ export const CONTACTS = {
 };
 
 export function SiteHeader({ cta }: { cta?: React.ReactNode }) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0B1F3A]/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-6">
-        <Link href="/" aria-label="На главную">
-          <BrandLogo size={30} tone="dark" />
+    <header
+      className={cn(
+        "sticky top-0 z-40 bg-white/90 backdrop-blur transition-shadow duration-300",
+        scrolled ? "shadow-[0_1px_0_#E5E8EE,0_8px_24px_rgba(15,27,45,0.06)]" : "shadow-[0_1px_0_transparent]",
+      )}
+    >
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-8 px-5 sm:px-8">
+        <Link href="/" aria-label="На главную" className="shrink-0">
+          <BrandLogo size={28} />
         </Link>
-        <nav className="ml-auto hidden items-center gap-6 text-sm text-white/70 md:flex">
-          <a href="/#inside" className="hover:text-white">Что внутри</a>
-          <a href="/#author" className="hover:text-white">Автор</a>
-          <a href="/#faq" className="hover:text-white">Вопросы</a>
+        <nav className="ml-auto hidden items-center gap-7 text-[14px] md:flex" style={{ color: C.text }}>
+          <a href="/#inside" className="transition-colors hover:text-[#0F1B2D]">Что внутри</a>
+          <a href="/#steps" className="transition-colors hover:text-[#0F1B2D]">Шаги</a>
+          <a href="/#author" className="transition-colors hover:text-[#0F1B2D]">Автор</a>
+          <a href="/#faq" className="transition-colors hover:text-[#0F1B2D]">Вопросы</a>
         </nav>
         <div className="ml-auto md:ml-0">{cta}</div>
       </div>
@@ -34,46 +51,44 @@ export function SiteFooter() {
   const { data } = useSite();
   const s = data?.seller;
   return (
-    <footer className="bg-[#081629] text-white/60">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 text-sm sm:px-6 md:grid-cols-3">
-        <div className="space-y-3">
-          <BrandLogo size={28} tone="dark" />
-          <p className="text-white/50">Визовое агентство VisaNews2U. Пошаговые гайды и сопровождение при получении виз.</p>
+    <footer style={{ background: C.ink, color: C.onDarkMuted }}>
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 text-[14px] sm:px-8 md:grid-cols-[1.2fr_1fr_1fr]">
+        <div className="space-y-4">
+          <BrandLogo size={26} tone="dark" />
+          <p className="max-w-xs leading-relaxed">
+            Визовое агентство VisaNews2U. Пошаговые гайды и сопровождение при получении виз.
+          </p>
         </div>
-        <div className="space-y-2">
-          <div className="font-semibold text-white">Документы</div>
-          <Link href="/offer" className="block hover:text-white">Публичная оферта</Link>
-          <Link href="/terms" className="block hover:text-white">Пользовательское соглашение</Link>
-          <Link href="/privacy" className="block hover:text-white">Политика конфиденциальности</Link>
-          <a href={CONTACTS.channel} target="_blank" rel="noreferrer" className="block hover:text-white">Telegram-канал</a>
+        <div className="space-y-2.5">
+          <div className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-white/40">Документы</div>
+          <Link href="/offer" className="block transition-colors hover:text-white">Публичная оферта</Link>
+          <Link href="/terms" className="block transition-colors hover:text-white">Пользовательское соглашение</Link>
+          <Link href="/privacy" className="block transition-colors hover:text-white">Политика конфиденциальности</Link>
         </div>
         <div className="space-y-1.5">
-          <div className="font-semibold text-white">Продавец</div>
+          <div className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-white/40">Продавец</div>
           {s?.name ? (
             <>
-              <div>{s.name}</div>
-              <div className="text-white/40">{SELLER_STATUS[s.status] ?? ""}</div>
+              <div className="text-white/80">{s.name}</div>
+              <div>{SELLER_STATUS[s.status] ?? ""}</div>
               {s.inn && <div>ИНН {s.inn}</div>}
               {s.ogrn && <div>{s.status === "company" ? "ОГРН" : "ОГРНИП"} {s.ogrn}</div>}
               {s.address && <div>{s.address}</div>}
               {s.email && (
-                <a href={`mailto:${s.email}`} className="block hover:text-white">
-                  {s.email}
-                </a>
+                <a href={`mailto:${s.email}`} className="block transition-colors hover:text-white">{s.email}</a>
               )}
               {s.phone && <div>{s.phone}</div>}
             </>
           ) : (
-            <div className="text-white/40">Реквизиты появятся после заполнения в кабинете.</div>
+            <div>Реквизиты появятся после заполнения в кабинете.</div>
           )}
         </div>
       </div>
-      <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-5 text-xs text-white/40 sm:px-6">
+      <div style={{ borderTop: `1px solid ${C.onDarkLine}` }}>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-5 py-5 text-[12px] text-white/40 sm:px-8">
           <span>© {new Date().getFullYear()} VisaNews2U</span>
-          <span>·</span>
-          <span>Оплата через Робокассу: банковские карты, СБП</span>
-          <Link href="/login" className="ml-auto hover:text-white/70">Вход для владельца</Link>
+          <span>Оплата через Робокассу — банковские карты и СБП</span>
+          <Link href="/login" className="ml-auto transition-colors hover:text-white/70">Вход для владельца</Link>
         </div>
       </div>
     </footer>

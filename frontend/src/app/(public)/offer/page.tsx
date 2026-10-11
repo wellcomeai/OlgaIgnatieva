@@ -113,7 +113,7 @@ export default function OfferPage() {
           <h2>9. Персональные данные</h2>
           <p>
             Оплачивая Материалы, Покупатель даёт согласие на обработку персональных данных в соответствии с{" "}
-            <Link href="/privacy" className="text-[#C2334A] underline">Политикой конфиденциальности</Link>.
+            <Link href="/privacy" className="text-[#2B2E81] underline">Политикой конфиденциальности</Link>.
           </p>
 
           <h2>10. Прочие условия</h2>

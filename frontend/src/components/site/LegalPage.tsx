@@ -24,14 +24,14 @@ export function LegalPage({
     <div className="min-h-screen bg-white">
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-        <h1 className="text-3xl font-extrabold tracking-tight text-[#0B1F3A] sm:text-4xl">{title}</h1>
-        <p className="mt-2 text-sm text-[#7a8294]">Редакция от {edition}</p>
-        <article className="legal mt-8 space-y-4 text-[15px] leading-relaxed text-[#1d2433] [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-[#0B1F3A] [&_li]:ml-5 [&_li]:list-disc [&_p]:text-[#2d3445]">
+        <h1 className="text-[32px] font-semibold tracking-[-0.02em] text-[#0F1B2D] sm:text-[40px]">{title}</h1>
+        <p className="mt-2 text-sm text-[#64748B]">Редакция от {edition}</p>
+        <article className="legal mt-8 space-y-4 text-[15px] leading-relaxed text-[#334155] [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-[#0F1B2D] [&_li]:ml-5 [&_li]:list-disc [&_p]:text-[#334155]">
           {children({ s, site, v })}
         </article>
-        <section className="mt-10 rounded-2xl bg-[#F5F6FA] p-6 text-sm">
-          <h2 className="mb-2 font-bold text-[#0B1F3A]">Реквизиты</h2>
-          <div className="space-y-1 text-[#2d3445]">
+        <section className="mt-12 rounded-2xl bg-[#F5F7FA] p-6 text-sm">
+          <h2 className="mb-2 font-semibold text-[#0F1B2D]">Реквизиты</h2>
+          <div className="space-y-1 text-[#334155]">
             <div>{v(s.name, "ФИО / наименование")}</div>
             <div>{SELLER_STATUS[s.status] ?? ""}</div>
             <div>ИНН: {v(s.inn, "ИНН")}</div>
