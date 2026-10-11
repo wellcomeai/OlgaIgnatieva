@@ -2,10 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, KeyRound, Loader2, RotateCcw } from "lucide-react";
+import { CheckCircle2, ExternalLink, FileText, Globe, KeyRound, Loader2, RotateCcw } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 
+import { botsApi } from "@/api/bots";
 import { integrationsApi } from "@/api/integrations";
+import { productsApi } from "@/api/shop";
 import { RobokassaStatus } from "@/components/shop/RobokassaStatus";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +38,12 @@ const SOURCE_LABEL: Record<IntegrationField["source"], string> = {
 export default function IntegrationsPage() {
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({ queryKey: ["integrations"], queryFn: () => integrationsApi.get() });
-  const fields = useMemo(() => data?.robokassa ?? [], [data]);
+  const fields = useMemo(
+    () => [...(data?.robokassa ?? []), ...(data?.legal ?? []), ...(data?.landing ?? [])],
+    [data],
+  );
+  const { data: products = [] } = useQuery({ queryKey: ["products"], queryFn: () => productsApi.list() });
+  const { data: bots = [] } = useQuery({ queryKey: ["bots"], queryFn: () => botsApi.list() });
   const [draft, setDraft] = useState<Draft>({});
   useEffect(() => setDraft(initialDraft(fields)), [fields]);
 
@@ -67,8 +75,14 @@ export default function IntegrationsPage() {
   });
 
   const set = (key: string, value: string | boolean) => setDraft((d) => ({ ...d, [key]: value }));
-  const main = fields.filter((f) => ["robokassa_merchant_login", "robokassa_password1", "robokassa_password2", "robokassa_test_mode"].includes(f.key));
-  const receipt = fields.filter((f) => !main.includes(f));
+  const robokassa = data?.robokassa ?? [];
+  const main = robokassa.filter((f) => ["robokassa_merchant_login", "robokassa_password1", "robokassa_password2", "robokassa_test_mode"].includes(f.key));
+  const receipt = robokassa.filter((f) => !main.includes(f));
+  // Для полей лендинга вместо ввода id — выбор из списка
+  const pickers: Record<string, { value: string; label: string }[]> = {
+    landing_product_id: products.map((p) => ({ value: p.id, label: `${p.title} — ${Number(p.price).toLocaleString("ru-RU")} ₽` })),
+    landing_bot_id: bots.map((b) => ({ value: b.id, label: `@${b.username}` })),
+  };
 
   function renderField(f: IntegrationField) {
     const val = draft[f.key];
@@ -101,6 +115,20 @@ export default function IntegrationsPage() {
             />
             <span className="text-sm">{val ? "Включено" : "Выключено"}</span>
           </label>
+        ) : pickers[f.key] ? (
+          <select
+            id={f.key}
+            value={String(val ?? "")}
+            onChange={(e) => set(f.key, e.target.value)}
+            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+          >
+            <option value="">— не показывать —</option>
+            {pickers[f.key].map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </select>
         ) : f.type === "choice" ? (
           <select
             id={f.key}
@@ -172,6 +200,36 @@ export default function IntegrationsPage() {
               Если касса в Робокассе уже настроена на номенклатуру по умолчанию — оставьте передачу чека выключенной.
             </p>
             <div className="grid gap-5 md:grid-cols-2">{receipt.map(renderField)}</div>
+          </section>
+
+          <section className="rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
+            <div className="mb-1 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-[#2B2E81]" />
+              <h2 className="text-[15px] font-bold">Реквизиты продавца</h2>
+            </div>
+            <p className="mb-5 text-sm text-[#636366]">
+              Подставляются в{" "}
+              <Link href="/offer" target="_blank" className="text-[#2B2E81] underline">оферту</Link>,{" "}
+              <Link href="/terms" target="_blank" className="text-[#2B2E81] underline">соглашение</Link>,{" "}
+              <Link href="/privacy" target="_blank" className="text-[#2B2E81] underline">политику</Link> и подвал
+              лендинга. Робокасса проверяет их при подключении магазина.
+            </p>
+            <div className="grid gap-5 md:grid-cols-2">{(data?.legal ?? []).map(renderField)}</div>
+          </section>
+
+          <section className="rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
+            <div className="mb-1 flex items-center gap-2">
+              <Globe className="h-5 w-5 text-[#2B2E81]" />
+              <h2 className="text-[15px] font-bold">Лендинг</h2>
+              <Link href="/" target="_blank" className="ml-auto flex items-center gap-1 text-xs text-[#2B2E81] hover:underline">
+                Открыть сайт <ExternalLink className="h-3 w-3" />
+              </Link>
+            </div>
+            <p className="mb-5 text-sm text-[#636366]">
+              Главная страница сайта продаёт выбранный продукт: цена берётся из продукта, кнопка «Купить» открывает бота
+              с карточкой оплаты.
+            </p>
+            <div className="grid gap-5 md:grid-cols-2">{(data?.landing ?? []).map(renderField)}</div>
           </section>
 
           <div className="flex items-center gap-3">

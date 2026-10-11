@@ -23,6 +23,7 @@ const TEMPLATES: { id: FlowTemplate; title: string; text: string }[] = [
   { id: "blank", title: "С нуля", text: "Только старт — соберите свою схему" },
   { id: "welcome_sale", title: "Приветствие и продажа", text: "Кнопка «Хочу» → продажа → через сутки дожим, если не купил" },
   { id: "lead_magnet", title: "Лид-магнит", text: "Подарок за email → тег «лид» → через час предложение продукта" },
+  { id: "subscribe_gift", title: "Подарок за подписку", text: "Подпишись на канал → «Я подписался» → проверка → файл или напоминание" },
 ];
 
 function CreateFlowDialog({ bot, open, onOpenChange }: { bot: Bot; open: boolean; onOpenChange: (v: boolean) => void }) {

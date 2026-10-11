@@ -1,6 +1,7 @@
 import { apiClient } from "./client";
 import type {
   Bot,
+  ChannelCheck,
   BotSourceStat,
   BotSubscriberPage,
   BotUpdate,
@@ -54,6 +55,11 @@ export const botsApi = {
 
   async sources(id: string): Promise<BotSourceStat[]> {
     const r = await apiClient.get(`/api/v1/bots/${id}/sources`);
+    return r.data;
+  },
+
+  async channelCheck(id: string, channel: string): Promise<ChannelCheck> {
+    const r = await apiClient.get(`/api/v1/bots/${id}/channel-check`, { params: { channel } });
     return r.data;
   },
 

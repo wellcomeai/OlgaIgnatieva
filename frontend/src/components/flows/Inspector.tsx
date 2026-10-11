@@ -1,7 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Plus, Trash2, X } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, Plus, ShieldCheck, Trash2, X, XCircle } from "lucide-react";
+
+import { botsApi } from "@/api/bots";
+import type { ChannelCheck } from "@/types";
 
 import { CopyButton } from "@/components/ui/copy-button";
 import { Input } from "@/components/ui/input";
@@ -86,6 +90,81 @@ function TextWithPlaceholders({
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+function ChannelField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const { botId, botUsername } = useEditor();
+  const [result, setResult] = useState<ChannelCheck | null>(null);
+  const [checking, setChecking] = useState(false);
+
+  async function check() {
+    setChecking(true);
+    try {
+      setResult(await botsApi.channelCheck(botId, value));
+    } catch {
+      setResult({ ok: false, error: "Не удалось проверить — попробуйте ещё раз" });
+    } finally {
+      setChecking(false);
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <Field label="Канал" hint="Публичная ссылка https://t.me/имя_канала или @имя_канала">
+        <Input
+          value={value}
+          placeholder="https://t.me/visanewstoyou"
+          onChange={(e) => {
+            onChange(e.target.value);
+            setResult(null);
+          }}
+        />
+      </Field>
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900">
+        <div className="mb-1 flex items-center gap-1.5 font-semibold">
+          <AlertTriangle className="h-3.5 w-3.5" /> Чтобы проверка работала
+        </div>
+        Добавьте бота{botUsername ? <b> @{botUsername}</b> : ""} <b>администратором канала</b>: канал → Управление
+        каналом → Администраторы → Добавить администратора. Никакие права, кроме самого статуса, не нужны. Без этого
+        Telegram не скажет боту, подписан ли человек, — и все пойдут по ветке «Нет».
+      </div>
+      <button
+        type="button"
+        onClick={check}
+        disabled={!value.trim() || checking}
+        className="flex w-full items-center justify-center gap-2 rounded-lg border border-black/[0.1] py-2 text-sm font-medium text-[#2B2E81] hover:bg-[rgba(6,157,223,0.06)] disabled:opacity-50"
+      >
+        {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+        Проверить доступ бота
+      </button>
+      {result && (
+        <div
+          className={cn(
+            "flex items-start gap-2 rounded-lg p-3 text-xs",
+            result.ok ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700",
+          )}
+        >
+          {result.ok ? <CheckCircle2 className="mt-px h-4 w-4 shrink-0" /> : <XCircle className="mt-px h-4 w-4 shrink-0" />}
+          <span>
+            {result.ok ? (
+              <>
+                Всё готово: бот — администратор канала <b>«{result.title}»</b> и сможет проверять подписку.
+              </>
+            ) : (
+              <>
+                {result.title && (
+                  <>
+                    Канал <b>«{result.title}»</b> найден. <br />
+                  </>
+                )}
+                {result.error}
+              </>
+            )}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
@@ -320,8 +399,12 @@ export function Inspector({
                 <option value="purchased">Купил продукт</option>
                 <option value="has_tag">Есть тег</option>
                 <option value="has_var">Ответил на вопрос</option>
+                <option value="subscribed">Подписан на канал</option>
               </select>
             </Field>
+            {d.kind === "subscribed" && (
+              <ChannelField value={d.channel ?? ""} onChange={(channel) => set({ channel })} />
+            )}
             {d.kind === "purchased" && <ProductSelect value={d.product_id} onChange={(v) => set({ product_id: v })} />}
             {d.kind === "has_tag" && (
               <Input placeholder="лид" maxLength={32} value={d.tag ?? ""} onChange={(e) => set({ tag: e.target.value })} />

@@ -35,6 +35,8 @@ function Summary({ node }: { node: FlowNodeT }) {
     case "condition":
       if (d.kind === "has_tag") return d.tag ? <span>Есть тег «{d.tag}»?</span> : empty("Укажите тег");
       if (d.kind === "has_var") return d.var ? <span>Ответил на «{d.var}»?</span> : empty("Укажите поле");
+      if (d.kind === "subscribed")
+        return d.channel ? <span>Подписан на {d.channel.replace(/^https?:\/\/(t\.me|telegram\.me)\//, "@")}?</span> : empty("Укажите канал");
       return product ? <span>Купил «{product.title}»?</span> : empty("Выберите продукт");
     case "tag":
       return d.tag ? (

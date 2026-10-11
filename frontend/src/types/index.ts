@@ -295,6 +295,7 @@ export interface FlowNodeData {
   product_id?: string | null;
   tag?: string;
   action?: "add" | "remove";
+  channel?: string;
   [key: string]: unknown;
 }
 
@@ -336,7 +337,7 @@ export interface FlowDetail extends FlowSummary {
   problems: string[];
 }
 
-export type FlowTemplate = "blank" | "welcome_sale" | "lead_magnet";
+export type FlowTemplate = "blank" | "welcome_sale" | "lead_magnet" | "subscribe_gift";
 
 // ---- Настройки интеграций ----
 
@@ -354,5 +355,28 @@ export interface IntegrationField {
 
 export interface IntegrationsState {
   robokassa: IntegrationField[];
+  legal: IntegrationField[];
+  landing: IntegrationField[];
   urls: PaymentsConfig;
+}
+
+export interface ChannelCheck {
+  ok: boolean;
+  title?: string | null;
+  is_admin?: boolean;
+  error: string | null;
+}
+
+export interface SiteInfo {
+  site_url: string;
+  seller: {
+    status: "self_employed" | "ip" | "company" | string;
+    name: string;
+    inn: string;
+    ogrn: string;
+    address: string;
+    email: string;
+    phone: string;
+  };
+  offer: { title: string; price: string; buy_url: string } | null;
 }

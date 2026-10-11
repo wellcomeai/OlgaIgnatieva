@@ -142,7 +142,7 @@ function Editor({ flow, products, botUsername }: Props) {
   const problems = flow.problems;
 
   return (
-    <EditorContext.Provider value={{ stats: flow.node_stats, products, botUsername }}>
+    <EditorContext.Provider value={{ stats: flow.node_stats, products, botUsername, botId: flow.bot_id }}>
       <div className="flex h-screen flex-col bg-[#f6f7fb]">
         {/* Верхняя панель */}
         <header className="flex h-14 shrink-0 items-center gap-3 border-b border-black/[0.07] bg-white px-4">

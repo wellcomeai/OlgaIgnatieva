@@ -20,9 +20,9 @@ src/app/
 ├── globals.css             # Tailwind + CSS-переменные темы
 │
 ├── (public)/               # публичные страницы
-│   ├── page.tsx            # / → редирект в /dashboard (платформа личная)
-│   ├── pricing/page.tsx    # /pricing
-│   └── ref/[code]/page.tsx # /ref/CODE
+│   ├── page.tsx            # / — лендинг гайда (components/site/GuideLanding)
+│   ├── offer|terms|privacy # оферта, соглашение, политика (реквизиты из /public/site)
+│   ├── pay/success|fail    # возврат из Робокассы
 │
 ├── (auth)/                 # auth страницы (layout без сайдбара)
 │   ├── layout.tsx
