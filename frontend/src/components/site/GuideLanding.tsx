@@ -8,16 +8,16 @@ import { ArrowRight, Check, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "./Reveal";
 import { CONTACTS, SiteFooter, SiteHeader } from "./SiteShell";
-import { C } from "./theme";
+import { C, SERIF } from "./theme";
 import { useSite } from "./useSite";
 
 const INSIDE = [
-  "Пошаговый маршрут от фотографии до получения паспорта",
-  "Требования к фото и правила работы с анкетой DS-160",
-  "Личный кабинет, оплата консульского сбора и запись на собеседование",
-  "Что взять с собой и как подготовиться к собеседованию",
-  "Что делать после собеседования и в случае отказа",
-  "Финальный чек-лист и шпаргалка на одной странице",
+  { t: "Маршрут целиком", d: "Пошаговый путь от фотографии до паспорта с визой" },
+  { t: "Фото и анкета DS-160", d: "Требования к фото и правила заполнения анкеты" },
+  { t: "Кабинет и запись", d: "Оплата консульского сбора и выбор даты собеседования" },
+  { t: "Собеседование", d: "Что взять с собой и как подготовиться к вопросам" },
+  { t: "После собеседования", d: "Статус паспорта и что делать, если пришёл отказ" },
+  { t: "Чек-лист и шпаргалка", d: "Всё самое важное — на одной странице" },
 ];
 
 const STEPS = [
@@ -125,8 +125,8 @@ function Eyebrow({ children, onDark = false }: { children: React.ReactNode; onDa
 function H2({ children, onDark = false }: { children: React.ReactNode; onDark?: boolean }) {
   return (
     <h2
-      className="text-[32px] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[40px]"
-      style={{ color: onDark ? "#fff" : C.ink }}
+      className="text-[34px] font-medium leading-[1.08] tracking-[-0.01em] sm:text-[44px]"
+      style={{ color: onDark ? "#fff" : C.ink, fontFamily: SERIF }}
     >
       {children}
     </h2>
@@ -183,59 +183,77 @@ export function GuideLanding() {
       <SiteHeader cta={<BuyButton />} />
 
       {/* Первый экран */}
-      <section className="mx-auto grid max-w-6xl items-center gap-14 px-5 pb-20 pt-14 sm:px-8 md:pt-20 lg:grid-cols-[1.15fr_0.85fr]">
-        <div>
-          <Reveal>
-            <Eyebrow>Пошаговый гайд · редакция октябрь 2026</Eyebrow>
-          </Reveal>
-          <Reveal delay={80}>
-            <h1
-              className="text-[38px] font-semibold leading-[1.04] tracking-[-0.03em] sm:text-[52px] lg:text-[60px]"
-              style={{ color: C.ink }}
-            >
-              Виза США B1/B2.
-              <br />
-              <span style={{ color: C.muted }}>Самостоятельно и без&nbsp;ошибок.</span>
-            </h1>
-          </Reveal>
-          <Reveal delay={160}>
-            <p className="mt-6 max-w-xl text-[18px] leading-relaxed">
-              Как гражданину РФ оформить туристическую визу США — от фотографии до паспорта с визой. Что сделать, в
-              каком порядке и где легко ошибиться.
-            </p>
-          </Reveal>
-          <Reveal delay={240}>
-            <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <BuyButton size="lg" />
-              <a href="#inside" className="text-[15px] font-medium underline-offset-4 hover:underline" style={{ color: C.ink }}>
-                Что внутри
-              </a>
+      <section className="relative overflow-hidden text-white" style={{ background: C.ink }}>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-48 -top-48 h-[720px] w-[720px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(43,46,129,0.55) 0%, transparent 62%)" }}
+        />
+        <div className="relative mx-auto grid max-w-6xl items-center gap-16 px-5 pb-24 pt-16 sm:px-8 md:pt-24 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <Reveal>
+              <Eyebrow onDark>Пошаговый гайд · редакция октябрь 2026</Eyebrow>
+            </Reveal>
+            <Reveal delay={80}>
+              <h1
+                className="text-[46px] font-medium leading-[1.02] tracking-[-0.015em] sm:text-[64px] lg:text-[72px]"
+                style={{ fontFamily: SERIF }}
+              >
+                Виза США B1/B2
+                <br />
+                <em className="font-normal" style={{ color: "rgba(255,255,255,0.62)" }}>
+                  самостоятельно
+                </em>
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-7 max-w-xl text-[18px] leading-relaxed" style={{ color: C.onDarkMuted }}>
+                Как гражданину РФ оформить туристическую визу США — от фотографии до паспорта с визой. Практический
+                маршрут: что сделать, в каком порядке и где легко ошибиться.
+              </p>
+            </Reveal>
+            <Reveal delay={240}>
+              <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
+                <BuyButton size="lg" onDark />
+                <a href="#inside" className="text-[15px] text-white/70 underline-offset-4 transition-colors hover:text-white hover:underline">
+                  Что внутри
+                </a>
+              </div>
+            </Reveal>
+            <Reveal delay={320}>
+              <dl
+                className="mt-14 grid max-w-lg grid-cols-3 gap-6 pt-6 text-[13px]"
+                style={{ borderTop: `1px solid ${C.onDarkLine}` }}
+              >
+                {[
+                  ["Формат", "PDF, 16 стр."],
+                  ["Разделов", "12 + чек-лист"],
+                  ["Доставка", "Сразу в Telegram"],
+                ].map(([k, v]) => (
+                  <div key={k}>
+                    <dt className="text-white/45">{k}</dt>
+                    <dd className="mt-1 text-[15px] text-white">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+          </div>
+          <Reveal delay={200} distance={48}>
+            <div className="relative mx-auto w-full max-w-[340px] sm:max-w-[380px]">
+              <img
+                src="/landing/guide-page-15.jpg"
+                alt=""
+                aria-hidden
+                className="absolute -right-10 top-12 hidden w-[78%] rotate-[6deg] rounded-lg opacity-90 shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:block"
+              />
+              <img
+                src="/landing/guide-page-01.jpg"
+                alt="Обложка гайда «Виза США B1/B2»"
+                className="relative w-full -rotate-[3deg] rounded-lg shadow-[0_40px_80px_rgba(0,0,0,0.55)] ring-1 ring-white/10"
+              />
             </div>
           </Reveal>
-          <Reveal delay={320}>
-            <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4 text-[14px]">
-              {[
-                ["Формат", "PDF, 16 страниц"],
-                ["Структура", "12 разделов"],
-                ["Доставка", "В Telegram сразу"],
-              ].map(([k, v]) => (
-                <div key={k}>
-                  <dt style={{ color: C.muted }}>{k}</dt>
-                  <dd className="mt-0.5 font-medium" style={{ color: C.ink }}>{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
         </div>
-        <Reveal delay={200} distance={40}>
-          <div className="relative mx-auto w-full max-w-[400px] rounded-[28px] p-8 sm:p-10" style={{ background: C.surface }}>
-            <img
-              src="/landing/guide-page-01.jpg"
-              alt="Обложка гайда «Виза США B1/B2»"
-              className="w-full rounded-lg shadow-[0_24px_48px_-12px_rgba(15,27,45,0.35)]"
-            />
-          </div>
-        </Reveal>
       </section>
 
       {/* Цифры */}
@@ -252,8 +270,8 @@ export function GuideLanding() {
               className={cn("px-5 py-10 sm:px-8", i > 0 && "sm:border-l")}
               style={{ borderColor: C.line }}
             >
-              <div className="text-[36px] font-semibold tracking-[-0.02em]" style={{ color: C.ink }}>{big}</div>
-              <div className="mt-1 text-[14px]" style={{ color: C.muted }}>{small}</div>
+              <div className="text-[44px] font-medium leading-none" style={{ color: C.ink, fontFamily: SERIF }}>{big}</div>
+              <div className="mt-3 text-[14px]" style={{ color: C.muted }}>{small}</div>
             </Reveal>
           ))}
         </div>
@@ -283,20 +301,25 @@ export function GuideLanding() {
         </div>
         <div>
           <Reveal><Eyebrow>Что внутри</Eyebrow></Reveal>
-          <ul>
+          <ol style={{ borderTop: `1px solid ${C.line}` }}>
             {INSIDE.map((item, i) => (
               <Reveal
                 as="li"
-                key={item}
+                key={item.t}
                 delay={i * 70}
-                className="flex gap-4 py-4"
-                style={{ borderTop: i ? `1px solid ${C.line}` : undefined }}
+                className="grid grid-cols-[52px_1fr] items-baseline py-5"
+                style={{ borderBottom: `1px solid ${C.line}` }}
               >
-                <Check className="mt-1 h-4 w-4 shrink-0" style={{ color: C.accent }} strokeWidth={2.5} />
-                <span className="text-[16px]" style={{ color: C.ink }}>{item}</span>
+                <span className="text-[22px] italic leading-none" style={{ color: C.accent, fontFamily: SERIF }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <div className="text-[17px] font-medium" style={{ color: C.ink }}>{item.t}</div>
+                  <div className="mt-1 text-[15px]" style={{ color: C.muted }}>{item.d}</div>
+                </div>
               </Reveal>
             ))}
-          </ul>
+          </ol>
         </div>
       </section>
 
@@ -310,14 +333,14 @@ export function GuideLanding() {
               <Reveal as="li" key={s.t} delay={i * 90} className="relative">
                 <div className="flex items-center gap-3">
                   <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-[14px] font-medium text-white"
-                    style={{ borderColor: i === STEPS.length - 1 ? C.accent : C.onDarkLine, background: i === STEPS.length - 1 ? C.accent : "transparent" }}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-[17px] italic text-white"
+                    style={{ fontFamily: SERIF,  borderColor: i === STEPS.length - 1 ? C.accent : C.onDarkLine, background: i === STEPS.length - 1 ? C.accent : "transparent" }}
                   >
                     {i + 1}
                   </span>
                   {i < STEPS.length - 1 && <span className="hidden h-px flex-1 md:block" style={{ background: C.onDarkLine }} />}
                 </div>
-                <div className="mt-5 text-[16px] font-medium text-white">{s.t}</div>
+                <div className="mt-6 text-[17px] font-medium text-white">{s.t}</div>
                 <p className="mt-2 text-[14px] leading-relaxed" style={{ color: C.onDarkMuted }}>{s.d}</p>
               </Reveal>
             ))}
@@ -351,20 +374,20 @@ export function GuideLanding() {
         <div>
           <Reveal><Eyebrow>Содержание</Eyebrow></Reveal>
           <Reveal delay={80}><H2>12 разделов</H2></Reveal>
-          <ol className="mt-10">
+          <ol className="mt-10" style={{ borderTop: `1px solid ${C.line}` }}>
             {CONTENTS.map((c, i) => (
               <Reveal
                 as="li"
                 key={c}
                 delay={(i % 6) * 50}
                 distance={16}
-                className="flex items-baseline gap-5 py-3"
-                style={{ borderTop: `1px solid ${C.line}` }}
+                className="grid grid-cols-[44px_1fr] items-baseline py-3.5"
+                style={{ borderBottom: `1px solid ${C.line}` }}
               >
-                <span className="w-6 text-[13px] tabular-nums" style={{ color: C.muted }}>
+                <span className="text-[17px] italic" style={{ color: C.muted, fontFamily: SERIF }}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="text-[15px]" style={{ color: C.ink }}>{c}</span>
+                <span className="text-[16px]" style={{ color: C.ink }}>{c}</span>
               </Reveal>
             ))}
           </ol>
@@ -406,8 +429,8 @@ export function GuideLanding() {
               ["Получите PDF", "Бот сразу пришлёт гайд в чат. Открывается на любом устройстве."],
             ].map(([t, d], i) => (
               <Reveal key={t} delay={i * 90} className="bg-white p-8">
-                <div className="text-[13px] tabular-nums" style={{ color: C.accent }}>0{i + 1}</div>
-                <div className="mt-4 text-[17px] font-medium" style={{ color: C.ink }}>{t}</div>
+                <div className="text-[28px] italic leading-none" style={{ color: C.accent, fontFamily: SERIF }}>0{i + 1}</div>
+                <div className="mt-6 text-[18px] font-medium" style={{ color: C.ink }}>{t}</div>
                 <p className="mt-2 text-[15px] leading-relaxed">{d}</p>
               </Reveal>
             ))}

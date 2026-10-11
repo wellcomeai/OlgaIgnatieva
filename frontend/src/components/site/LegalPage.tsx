@@ -1,6 +1,7 @@
 "use client";
 
 import { SiteFooter, SiteHeader } from "./SiteShell";
+import { SERIF } from "./theme";
 import { SELLER_STATUS, req, useSite } from "./useSite";
 import type { SiteInfo } from "@/types";
 
@@ -24,7 +25,7 @@ export function LegalPage({
     <div className="min-h-screen bg-white">
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-        <h1 className="text-[32px] font-semibold tracking-[-0.02em] text-[#0F1B2D] sm:text-[40px]">{title}</h1>
+        <h1 className="text-[36px] font-medium tracking-[-0.01em] text-[#0F1B2D] sm:text-[46px]" style={{ fontFamily: SERIF }}>{title}</h1>
         <p className="mt-2 text-sm text-[#64748B]">Редакция от {edition}</p>
         <article className="legal mt-8 space-y-4 text-[15px] leading-relaxed text-[#334155] [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-[#0F1B2D] [&_li]:ml-5 [&_li]:list-disc [&_p]:text-[#334155]">
           {children({ s, site, v })}

@@ -11,3 +11,6 @@ export const C = {
   onDarkMuted: "rgba(255,255,255,0.62)",
   onDarkLine: "rgba(255,255,255,0.12)",
 } as const;
+
+/** Засечка для заголовков и крупных цифр (подключается в app/(public)/layout.tsx). */
+export const SERIF = "var(--font-display), Georgia, serif";
