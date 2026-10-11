@@ -25,7 +25,7 @@ class IntegrationsUpdate(BaseModel):
 
 async def _state(db: AsyncSession) -> dict[str, Any]:
     return {
-        "robokassa": await app_settings.describe(db),
+        **{group: await app_settings.describe(db, group) for group in app_settings.GROUPS},
         "urls": (await shop_service.payments_config(db)).model_dump(),
     }
 

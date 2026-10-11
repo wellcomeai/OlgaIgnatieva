@@ -56,4 +56,29 @@ def lead_magnet() -> dict[str, Any]:
     return {"nodes": nodes, "edges": edges}
 
 
-TEMPLATES = {"blank": blank, "welcome_sale": welcome_sale, "lead_magnet": lead_magnet}
+def subscribe_gift() -> dict[str, Any]:
+    """Подарок за подписку на канал: проверка подписки и повтор, пока не подпишется."""
+    nodes = [
+        _n("start", "trigger", 0, 120, kind="start", value=""),
+        _n("ask", "message", 300, 80,
+           text="{first_name}, дарю бесплатный чек-лист 🎁\n\n"
+                "Подпишитесь на канал, а затем нажмите «Я подписался».",
+           buttons=[{"id": "chan", "type": "url", "text": "Перейти в канал", "url": ""},
+                    {"id": "done", "type": "next", "text": "Я подписался"}]),
+        _n("check", "condition", 640, 100, kind="subscribed", channel=""),
+        _n("gift", "files", 960, 40, product_id=None),
+        _n("nope", "message", 960, 260,
+           text="Пока не вижу подписки 🙈 Подпишитесь на канал и нажмите кнопку ещё раз.",
+           buttons=[{"id": "again", "type": "next", "text": "Проверить ещё раз"}]),
+    ]
+    edges = [_e("start", "ask"), _e("ask", "check", "btn:done"), _e("check", "gift", "yes"),
+             _e("check", "nope", "no"), _e("nope", "check", "btn:again")]
+    return {"nodes": nodes, "edges": edges}
+
+
+TEMPLATES = {
+    "blank": blank,
+    "welcome_sale": welcome_sale,
+    "lead_magnet": lead_magnet,
+    "subscribe_gift": subscribe_gift,
+}

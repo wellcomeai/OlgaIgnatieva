@@ -16,7 +16,16 @@ from datetime import datetime, timezone  # noqa: E402
 
 from aiogram.client.session.base import BaseSession  # noqa: E402
 from aiogram.exceptions import TelegramAPIError  # noqa: E402
-from aiogram.types import Chat, Document, Message, User, UserProfilePhotos, WebhookInfo  # noqa: E402
+from aiogram.types import (  # noqa: E402
+    Chat,
+    ChatFullInfo,
+    ChatMemberMember,
+    Document,
+    Message,
+    User,
+    UserProfilePhotos,
+    WebhookInfo,
+)
 from sqlalchemy import delete  # noqa: E402
 
 from database import AsyncSessionLocal, engine  # noqa: E402
@@ -41,6 +50,9 @@ class FakeSession(BaseSession):
         self.errors: dict[str, tuple[type[TelegramAPIError], str]] = {}
         self.me = User(id=7000001, is_bot=True, first_name="Visa Bot", username="visa_test_bot")
         self._n = 0
+        # getChatMember: user_id → статус ("member", "left", "administrator", ...)
+        self.chat_members: dict[int, str] = {}
+        self.chat_title = "VisaNews2U канал"
 
     async def make_request(self, bot, method, timeout=None):  # noqa: ANN001
         name = type(method).__name__
@@ -53,6 +65,13 @@ class FakeSession(BaseSession):
             return self.me
         if name == "GetWebhookInfo":
             return WebhookInfo(url="", has_custom_certificate=False, pending_update_count=0)
+        if name == "GetChat":
+            return ChatFullInfo.model_construct(id=-1001234567890, type="channel", title=self.chat_title)
+        if name == "GetChatMember":
+            status = self.chat_members.get(method.user_id, "left")
+            return ChatMemberMember.model_construct(
+                status=status, user=User(id=method.user_id, is_bot=False, first_name="x")
+            )
         if name == "GetUserProfilePhotos":
             return UserProfilePhotos(total_count=0, photos=[])
         if name in ("SendMessage", "SendDocument"):

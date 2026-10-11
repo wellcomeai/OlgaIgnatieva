@@ -12,6 +12,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config import settings
 from modules.app_settings.service import RobokassaConfig, robokassa_config
 from modules.billing import robokassa
 from modules.bots.messaging import send_text
@@ -134,6 +135,9 @@ async def send_offer(
     if product.description.strip():
         parts.append(product.description.strip())
     parts.append(f"Стоимость: <b>{price} ₽</b>")
+    parts.append(
+        f'<i>Нажимая «Оплатить», вы принимаете условия <a href="{settings.app_url.rstrip("/")}/offer">оферты</a>.</i>'
+    )
     markup = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text=f"💳 Оплатить {price} ₽", url=payment_url(cfg, order, bot_row))]

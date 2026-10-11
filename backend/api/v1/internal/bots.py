@@ -92,6 +92,17 @@ async def list_subscribers(
     )
 
 
+@router.get("/{bot_id}/channel-check")
+async def channel_check(
+    bot_id: UUID, user: CurrentUser, db: Db, channel: str = Query(min_length=1, max_length=200)
+):
+    """Проверить, видит ли бот канал и является ли он там администратором."""
+    from modules.bots.channels import check_access
+
+    bot = await bots_service.get_bot(db, user, bot_id)
+    return await check_access(bots_service.tg_bot(bot), channel, bot.tg_bot_id)
+
+
 @router.get("/{bot_id}/sources", response_model=list[SourceStat])
 async def source_stats(bot_id: UUID, user: CurrentUser, db: Db):
     bot = await bots_service.get_bot(db, user, bot_id)

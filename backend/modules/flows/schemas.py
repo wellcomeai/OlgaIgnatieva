@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 
 class FlowCreate(BaseModel):
     name: str = Field(min_length=1, max_length=255)
-    template: Literal["blank", "welcome_sale", "lead_magnet"] = "blank"
+    template: Literal["blank", "welcome_sale", "lead_magnet", "subscribe_gift"] = "blank"
 
 
 class FlowUpdate(BaseModel):

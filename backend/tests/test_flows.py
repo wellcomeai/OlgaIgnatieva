@@ -287,3 +287,66 @@ async def test_free_files_block(client, fake_tg):
         [e("s", "f"), e("f", "m")]))
     await send_update(client, bot["id"], message_update("хочу чеклист"))
     assert fake_tg.methods()[-2:] == ["SendDocument", "SendMessage"]
+
+
+# ---- подписка на канал ---------------------------------------------------
+
+def test_parse_channel():
+    from modules.bots.channels import parse_channel
+
+    assert parse_channel("https://t.me/visanewstoyou") == "@visanewstoyou"
+    assert parse_channel("t.me/visanewstoyou/") == "@visanewstoyou"
+    assert parse_channel("@visanewstoyou") == "@visanewstoyou"
+    assert parse_channel("visanewstoyou") == "@visanewstoyou"
+    assert parse_channel("-1001234567890") == -1001234567890
+    assert parse_channel("https://t.me/+AbCdEf") is None  # инвайт-ссылку не определить
+    assert parse_channel("") is None
+
+
+async def test_subscription_condition_branches(client, fake_tg):
+    bot = await connect_bot(client)
+    await make_flow(client, bot["id"], graph(
+        [n("s", "trigger", kind="start"),
+         n("ask", "message", text="Подпишитесь", buttons=[
+             {"id": "chan", "type": "url", "text": "Канал", "url": "https://t.me/visanewstoyou"},
+             {"id": "done", "type": "next", "text": "Я подписался"}]),
+         n("c", "condition", kind="subscribed", channel="https://t.me/visanewstoyou"),
+         n("yes", "message", text="Спасибо за подписку!"),
+         n("no", "message", text="Пока не вижу подписки", buttons=[{"id": "again", "type": "next", "text": "Ещё раз"}])],
+        [e("s", "ask"), e("ask", "c", "btn:done"), e("c", "yes", "yes"), e("c", "no", "no"), e("no", "c", "btn:again")]))
+
+    await send_update(client, bot["id"], message_update("/start"))
+    done_cb = fake_tg.last("SendMessage").reply_markup.inline_keyboard[1][0].callback_data
+
+    # не подписан → ветка «нет»
+    await send_update(client, bot["id"], callback_update(done_cb))
+    assert texts(fake_tg)[-1] == "Пока не вижу подписки"
+    check = fake_tg.last("GetChatMember")
+    assert check.chat_id == "@visanewstoyou" and check.user_id == 42
+
+    # подписался → «Ещё раз» → ветка «да»
+    fake_tg.chat_members[42] = "member"
+    again_cb = fake_tg.last("SendMessage").reply_markup.inline_keyboard[0][0].callback_data
+    await send_update(client, bot["id"], callback_update(again_cb))
+    assert texts(fake_tg)[-1] == "Спасибо за подписку!"
+
+
+async def test_subscription_condition_requires_channel(client, fake_tg):
+    bot = await connect_bot(client)
+    flow = (await client.post(f"/api/v1/bots/{bot['id']}/flows", json={"name": "x", "template": "subscribe_gift"})).json()
+    assert any("укажите канал" in p for p in flow["problems"])
+
+
+async def test_channel_check_endpoint(client, fake_tg):
+    bot = await connect_bot(client)
+    url = f"/api/v1/bots/{bot['id']}/channel-check"
+    r = (await client.get(url, params={"channel": "https://t.me/+invite"})).json()
+    assert r["ok"] is False and "t.me/имя_канала" in r["error"]
+
+    r = (await client.get(url, params={"channel": "@visanewstoyou"})).json()
+    assert r == {"ok": False, "title": "VisaNews2U канал", "is_admin": False,
+                 "error": "Бот не администратор канала — проверить подписку он не сможет"}
+
+    fake_tg.chat_members[7000001] = "administrator"  # id бота из getMe
+    r = (await client.get(url, params={"channel": "@visanewstoyou"})).json()
+    assert r["ok"] is True and r["is_admin"] is True

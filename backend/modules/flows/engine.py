@@ -18,6 +18,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from modules.bots.channels import is_subscribed, parse_channel
 from modules.bots.messaging import render_template, send_text
 from modules.bots.models import Bot, Subscriber
 from modules.bots.telegram import TelegramAPIError
@@ -70,8 +71,11 @@ async def _purchased(db: AsyncSession, sub: Subscriber, product_id: str | None) 
     )
 
 
-async def _condition(db: AsyncSession, sub: Subscriber, d: dict[str, Any]) -> bool:
+async def _condition(tg: TgBot, db: AsyncSession, sub: Subscriber, d: dict[str, Any]) -> bool:
     kind = d.get("kind")
+    if kind == "subscribed":
+        channel = parse_channel(d.get("channel"))
+        return channel is not None and await is_subscribed(tg, channel, sub.tg_user_id)
     if kind == "purchased":
         return await _purchased(db, sub, d.get("product_id"))
     if kind == "has_tag":
@@ -139,7 +143,7 @@ async def advance(
             if product is not None:
                 await send_product(tg, db, bot_row, sub, product, with_message=False)
         elif t == "condition":
-            handle = "yes" if await _condition(db, sub, d) else "no"
+            handle = "yes" if await _condition(tg, db, sub, d) else "no"
         elif t == "tag":
             _set_tag(sub, d.get("tag") or "", d.get("action") == "add")
 

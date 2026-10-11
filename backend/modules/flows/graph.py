@@ -21,7 +21,7 @@ NODE_TYPES = {"trigger", "message", "delay", "question", "offer", "files", "cond
 TRIGGER_KINDS = {"start", "start_label", "keyword", "purchase"}
 DELAY_UNITS = {"minutes": 60, "hours": 3600, "days": 86400}
 QUESTION_VALIDATE = {"any", "email", "phone"}
-CONDITION_KINDS = {"purchased", "has_tag", "has_var"}
+CONDITION_KINDS = {"purchased", "has_tag", "has_var", "subscribed"}
 
 ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 BTN_ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,12}$")
@@ -174,6 +174,11 @@ def validate(graph: Any, product_ids: set[str]) -> Validation:
                 problems.append(f"{name}: укажите тег")
             if kind == "has_var" and not VAR_RE.match(_text(d.get("var"))):
                 problems.append(f"{name}: укажите поле, например email")
+            if kind == "subscribed":
+                from modules.bots.channels import parse_channel
+
+                if parse_channel(d.get("channel")) is None:
+                    problems.append(f"{name}: укажите канал — https://t.me/имя_канала или @имя_канала")
         elif t == "tag":
             if d.get("action") not in ("add", "remove"):
                 raise GraphError(f"{name}: неизвестное действие")

@@ -17,6 +17,7 @@ from api.v1.internal import (
 )
 from api.v1.public import (
     me as public_me_router,
+    site as site_router,
     telegram as telegram_router,
     webhooks as webhooks_router,
 )
@@ -39,3 +40,4 @@ api_router.include_router(admin_router.router)
 api_router.include_router(public_me_router.router)
 api_router.include_router(webhooks_router.router)
 api_router.include_router(telegram_router.router)
+api_router.include_router(site_router.router)

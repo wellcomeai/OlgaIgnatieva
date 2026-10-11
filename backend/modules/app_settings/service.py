@@ -62,7 +62,31 @@ ROBOKASSA_FIELDS: tuple[FieldSpec, ...] = (
     FieldSpec("robokassa_payment_object", "Предмет расчёта", type="choice", choices=OBJECT_CHOICES),
 )
 
-FIELDS: dict[str, FieldSpec] = {f.key: f for f in ROBOKASSA_FIELDS}
+SELLER_STATUS = (("self_employed", "Самозанятый"), ("ip", "Индивидуальный предприниматель"), ("company", "Юридическое лицо"))
+
+LEGAL_FIELDS: tuple[FieldSpec, ...] = (
+    FieldSpec("seller_status", "Статус продавца", type="choice", choices=SELLER_STATUS),
+    FieldSpec("seller_name", "ФИО или название",
+              help="Как в документах: «Игнатьева Ольга Викторовна» или «ИП Игнатьева О. В.»"),
+    FieldSpec("seller_inn", "ИНН"),
+    FieldSpec("seller_ogrn", "ОГРНИП / ОГРН", help="Для самозанятых не нужен"),
+    FieldSpec("seller_address", "Адрес", help="Для ИП и юрлиц; самозанятым можно не указывать"),
+    FieldSpec("seller_email", "Email для покупателей", help="Сюда пишут по вопросам оплаты и возврата"),
+    FieldSpec("seller_phone", "Телефон"),
+)
+
+LANDING_FIELDS: tuple[FieldSpec, ...] = (
+    FieldSpec("landing_product_id", "Продукт на лендинге", help="Цена и кнопка «Купить» на главной странице сайта"),
+    FieldSpec("landing_bot_id", "Бот для покупки", help="Кнопка «Купить» откроет этого бота с карточкой продукта"),
+)
+
+GROUPS: dict[str, tuple[FieldSpec, ...]] = {
+    "robokassa": ROBOKASSA_FIELDS,
+    "legal": LEGAL_FIELDS,
+    "landing": LANDING_FIELDS,
+}
+
+FIELDS: dict[str, FieldSpec] = {f.key: f for group in GROUPS.values() for f in group}
 
 
 def _env_value(key: str) -> Any:
@@ -94,12 +118,13 @@ async def effective(db: AsyncSession) -> dict[str, Any]:
     return result
 
 
-async def describe(db: AsyncSession) -> list[dict[str, Any]]:
-    """Поля для кабинета: значения обычных полей, для секретов — только «задан»."""
+async def describe(db: AsyncSession, group: str = "robokassa") -> list[dict[str, Any]]:
+    """Поля группы для кабинета: значения обычных полей, для секретов — только «задан»."""
     stored = await _stored(db)
     values = await effective(db)
     out = []
-    for key, spec in FIELDS.items():
+    for spec in GROUPS[group]:
+        key = spec.key
         value = values[key]
         source = "ui" if key in stored else ("env" if value not in ("", None, False) or spec.type == "bool" else "none")
         item: dict[str, Any] = {

@@ -85,6 +85,17 @@ class Settings(BaseSettings):
     # ADMIN_EMAIL / ADMIN_PASSWORD скриптом scripts/create_admin.py.
     registration_enabled: bool = Field(default=False)
 
+    # === Реквизиты продавца и лендинг (обычно задаются в кабинете → Интеграции) ===
+    seller_status: str = Field(default="self_employed")  # self_employed | ip | company
+    seller_name: str = Field(default="")
+    seller_inn: str = Field(default="")
+    seller_ogrn: str = Field(default="")
+    seller_address: str = Field(default="")
+    seller_email: str = Field(default="")
+    seller_phone: str = Field(default="")
+    landing_product_id: str = Field(default="")
+    landing_bot_id: str = Field(default="")
+
     # === Файлы продуктов ===
     media_root: str = Field(default="media")
 

@@ -82,3 +82,39 @@ async def test_only_owner(client):
         async with AsyncSessionLocal() as db:
             await db.delete(await db.get(User, u.id))
             await db.commit()
+
+
+# ---- лендинг и реквизиты -------------------------------------------------
+
+async def test_public_site_info(client, fake_tg):
+    import httpx
+
+    from main import app
+
+    bot = await connect_bot(client)
+    product = (await client.post("/api/v1/products", json={"title": "Виза США B1/B2", "price": "990"})).json()
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as anon:
+        info = (await anon.get("/api/v1/public/site")).json()
+        assert info["offer"] is None and info["seller"]["name"] == ""
+
+        await client.put("/api/v1/settings/integrations", json={"values": {
+            "seller_name": "Игнатьева Ольга", "seller_inn": "770000000000", "seller_email": "hello@example.com",
+            "landing_product_id": product["id"], "landing_bot_id": bot["id"]}})
+        info = (await anon.get("/api/v1/public/site")).json()
+        assert info["seller"]["name"] == "Игнатьева Ольга" and info["seller"]["inn"] == "770000000000"
+        assert info["offer"]["price"] == "990.00"
+        assert info["offer"]["buy_url"] == f"https://t.me/visa_test_bot?start=buy-{product['id'].replace('-', '')}"
+
+        # снятый с продажи продукт с лендинга пропадает
+        await client.patch(f"/api/v1/products/{product['id']}", json={"is_active": False})
+        assert (await anon.get("/api/v1/public/site")).json()["offer"] is None
+
+
+async def test_offer_card_links_to_offer(client, fake_tg, monkeypatch):
+    monkeypatch.setattr(settings, "robokassa_merchant_login", "shop")
+    monkeypatch.setattr(settings, "robokassa_password1", "p1")
+    monkeypatch.setattr(settings, "robokassa_password2", "p2")
+    bot = await connect_bot(client)
+    product = (await client.post("/api/v1/products", json={"title": "Гайд", "price": "990"})).json()
+    await send_update(client, bot["id"], message_update("/start buy-" + product["id"].replace("-", "")))
+    assert "/offer" in fake_tg.last("SendMessage").text
